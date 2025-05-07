@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <title>APL 2025 </title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>APL 2025 </h1>
+
+  <div id="teamSelect">
+    <label>Home:
+      <select id="teamA">
+        <option>FW</option><option>ONE</option><option>BMG</option><option>HKA</option><option>DCG</option><option>ANK</option>
+        <option>EA</option><option>BAC</option><option>BRU</option><option>TLN</option><option>FS</option><option>PSG</option>
+        <option>FPT</option><option>SGP</option><option>BOX</option><option>1S</option><option>SPN</option><option>TDT</option>
+        <option>ASL1</option><option>ASL2</option>
+      </select>
+    </label>
+    <label>Guest:
+      <select id="teamB">
+        <option>FW</option><option>ONE</option><option>BMG</option><option>HKA</option><option>DCG</option><option>ANK</option>
+        <option>EA</option><option>BAC</option><option>BRU</option><option>TLN</option><option>FS</option><option>PSG</option>
+        <option>FPT</option><option>SGP</option><option>BOX</option><option>1S</option><option>SPN</option><option>TDT</option>
+        <option>ASL1</option><option>ASL2</option>
+      </select>
+    </label><br/>
+    <label>BO
+      <select id="boMode"><option value="3">3</option><option value="5">5</option><option value="7" selected>7</option></select>
+    </label>
+    <label><input type="checkbox" id="ultimateCheck" /> Ultimate Battle（BO7中第7局盲選）</label><br/>
+    <button onclick="startSeries()">MATCH START</button>
+  </div>
+
+  <!-- 選邊 -->
+  <div id="sideSelect" style="display:none;">
+    <p id="sideSelectPrompt" style="font-weight:bold;"></p>
+    <button class="side-button" id="btnBlue">🔵 Blue Side</button>
+    <button class="side-button" id="btnRed">🔴 Red Side</button>
+  </div>
+
+  <!-- 比分顯示 -->
+  <div id="scoreBoard"></div>
+  <!-- LAST BP -->
+  <div id="historySection">
+  <h3>LAST BP</h3>
+  <table id="historyTable" border="1" style="margin: 0 auto; border-collapse: collapse;">
+    <thead>
+      <tr>
+        <th id="thHomeBan">主隊 BAN</th>
+        <th id="thHomePick">主隊 PICK</th>
+        <th id="thHomeSide">主隊 SIDE</th>
+        <th>GAME</th>
+        <th id="thGuestSide">客隊 SIDE</th>
+        <th id="thGuestPick">客隊 PICK</th>
+        <th id="thGuestBan">客隊 BAN</th>
+      </tr>
+    </thead>
+    <tbody id="historyBody"></tbody>
+  </table>
+</div>
+
+  <!-- BP階段說明提示文字 -->
+<div id="bpStageInfo"></div>
+
+<!-- BP表格顯示區 -->
+<div id="bpTableContainer">
+  <div id="bpTableWrapper" style="display: flex; justify-content: center; gap: 40px;">
+    <!-- Blue Side 表格 -->
+    <table class="bp-table">
+      <tr>
+        <td id="blueTitle">🔵 Blue Side</td>
+        <td id="blueBan1"></td>
+        <td id="blueBan2"></td>
+        <td id="blueBan3"></td>
+        <td id="blueBan4"></td>
+      </tr>
+      <tr>
+        <td id="bluePick1"></td>
+        <td id="bluePick2"></td>
+        <td id="bluePick3"></td>
+        <td id="bluePick4"></td>
+        <td id="bluePick5"></td>
+      </tr>
+    </table>
+
+    <!-- Red Side 表格 -->
+    <table class="bp-table">
+      <tr>
+        <td id="redTitle">🔴 Red Side</td>
+        <td id="redBan1"></td>
+        <td id="redBan2"></td>
+        <td id="redBan3"></td>
+        <td id="redBan4"></td>
+      </tr>
+      <tr>
+        <td id="redPick1"></td>
+        <td id="redPick2"></td>
+        <td id="redPick3"></td>
+        <td id="redPick4"></td>
+        <td id="redPick5"></td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+  <div id="heroSection" style="display:none;">
+    <div id="heroes"></div>
+  </div>
+
+  <!-- 勝負選擇 -->
+  <div id="winnerSelect" style="display:none;">
+    <h3>請選擇本局獲勝隊伍：</h3>
+    <button id="btnWinA"></button>
+    <button id="btnWinB"></button>
+  </div>
+  <!-- 重置本局按鈕 -->
+  <div id="resetSection">
+    <button onclick="resetCurrentGame()">Reset The Game</button>
+  </div>
+  
+  
+
+  <script>
+   const heroes =["夜叉","塔拉","愛里","筱清","龍馬","艾蜜莉","美娜","麥克思","緋淚",
+    "弗洛倫","司科德","葉娜","司空震","狂鐵","貝揚","夏洛特","凱格路士",
+    "瑞克","亞連","安格列","艾翠絲","夜姬","莫拉","瑪迦","海諾",
+    "趙雲","瑟斐斯","青硯","比洛爾","刀鋒寶貝","洛克","科里納卡","納克羅斯","綺蘿","星葵",
+    "悟空","潘因","奎倫","祖卡","呂布","凱恩","齊爾","布萊特","閃電俠","蘇離",
+    "蘭鐸","霧己","埃羅","神力女超人",
+    "拉茲","莉莉安","颯枷","阿茲卡","伊耿士",
+    "穆加爵","伊格","令月","圖倫","娜塔亞",
+    "克里希","狄拉克","洛里昂","邦尼","盧蜜亞",
+    "貂蟬","薇菈","阿萊斯特","依夏","金納",
+    "蘿兒","普雷塔","卡莉","達爾西","若伊",
+    "勇","森圖爾特","卡芬妮","亥犽","特爾安娜絲",
+    "凡恩","堇","蘇","靈靈","史蘭茲","緹莉",
+    "艾琳","拉維爾","摩恩","希露卡","索文",
+    "菲尼克","琳蒂","瀾","海倫","愛麗絲","朵莉亞",
+    "卡瑞茲","明世隱","安奈特","芽芽","皮皮",
+    "薩尼","哥德爾","牛魔王","提米","朗博",
+    "伯頓","克萊斯","查戈納爾","夸克","古木",
+    "歐米茄","艾瑞","渥馬爾","維羅","阿杜恩",
+    "超人","阿塔","贊尼爾","諾可西","莫托斯","銀晝","馬洛斯"];
+    const phaseSequence = [
+      { team: "b", action: "Ban", count: 1 }, { team: "r", action: "Ban", count: 1 },
+      { team: "b", action: "Ban", count: 1 }, { team: "r", action: "Ban", count: 1 },
+      { team: "b", action: "Pick", count: 1 }, { team: "r", action: "Pick", count: 2 },
+      { team: "b", action: "Pick", count: 2 }, { team: "r", action: "Pick", count: 1 },
+      { team: "r", action: "Ban", count: 1 }, { team: "b", action: "Ban", count: 1 },
+      { team: "r", action: "Ban", count: 1 }, { team: "b", action: "Ban", count: 1 },
+      { team: "r", action: "Pick", count: 1 }, { team: "b", action: "Pick", count: 2 },
+      { team: "r", action: "Pick", count: 1 }
+    ];
+
+  let teamAName = "A隊", teamBName = "B隊";
+  let score = { A: 0, B: 0 };
+  let currentGame = 0, maxGame = 5;
+  let sideChooser = "A";
+  let sideToTeam = { b: "", r: "" };
+  let sideSelected = false;
+  let allPicks = {};
+  heroes.forEach(h => allPicks[h] = { A: false, B: false });
+  let picks = { b: [], r: [] }, bans = { b: [], r: [] };
+  const selectedHeroes = new Set();
+  let useUltimateBattle = false;
+  let isUltimate = false;
+
+  let phaseIndex = 0, phaseActionCount = 0;
+  let matchHistory = [];
+  let matchResults = [];
+
+  function startSeries() {
+    teamAName = document.getElementById("teamA").value;
+    teamBName = document.getElementById("teamB").value;
+    maxGame = parseInt(document.getElementById("boMode").value);
+    useUltimateBattle = document.getElementById("ultimateCheck").checked;
+
+    if (teamAName === teamBName) {
+      alert("請選擇不同隊伍！");
+      return;
+    }
+
+    score = { A: 0, B: 0 };
+    currentGame = 1;
+    sideChooser = "A";
+    document.getElementById("teamSelect").style.display = "none";
+    document.getElementById("sideSelect").style.display = "block";
+    setupSideButtons();
+    updateScoreboard();
+  }
+
+
+    function setupSideButtons() {
+    const chooserName = sideChooser === "A" ? teamAName : teamBName;
+    document.getElementById("sideSelectPrompt").innerText = `GAME ${currentGame} , ${chooserName} chooses a side`;
+    document.getElementById("btnBlue").onclick = () => selectSide(sideChooser, "b");
+    document.getElementById("btnRed").onclick = () => selectSide(sideChooser, "r");
+  }
+
+  function selectSide(team, side) {
+    sideToTeam = side === "b" ? { b: team, r: team === "A" ? "B" : "A" }
+                              : { r: team, b: team === "A" ? "B" : "A" };
+    sideSelected = true;
+
+    isUltimate = (useUltimateBattle && currentGame === 7 &&  maxGame === 7 && score.A === 3 && score.B === 3);
+
+    document.getElementById("sideSelect").style.display = "none";
+    document.getElementById("heroSection").style.display = "block";
+    document.getElementById("blueTitle").innerText = `🔵 ${sideToTeam.b === "A" ? teamAName : teamBName}`;
+    document.getElementById("redTitle").innerText = `🔴 ${sideToTeam.r === "A" ? teamAName : teamBName}`;
+    setupVictoryButtons();
+    renderPhase();
+    renderHeroes();
+  }
+
+  function setupVictoryButtons() {
+    const btnA = document.getElementById("btnWinA");
+    const btnB = document.getElementById("btnWinB");
+    btnA.innerText = `${teamAName} Win`;
+    btnB.innerText = `${teamBName} Win`;
+    btnA.onclick = () => setWinner("A");
+    btnB.onclick = () => setWinner("B");
+  }
+  function resetCurrentGame() {
+
+  // 清除該局內部紀錄（不影響全局記錄）
+  selectedHeroes.clear();
+  picks = { b: [], r: [] };
+  bans = { b: [], r: [] };
+  phaseIndex = 0;
+  phaseActionCount = 0;
+  updateBPTable();
+
+  // 隱藏勝負選擇，回到選角階段
+  document.getElementById("winnerSelect").style.display = "none";
+  document.getElementById("btnWinA").disabled = true;
+  document.getElementById("btnWinB").disabled = true;
+
+  renderPhase();
+  renderHeroes();
+}
+
+  function setWinner(winner) {
+    picks.b.forEach(h => { allPicks[h][sideToTeam.b] = true; });
+    picks.r.forEach(h => { allPicks[h][sideToTeam.r] = true; });
+    matchHistory.push({
+      bluePick: picks.b.slice(),
+      redPick: picks.r.slice(),
+      blueBan: bans.b.slice(),
+      redBan: bans.r.slice()
+        });
+    score[winner]++;
+    const loser = winner === "A" ? "B" : "A";
+    sideChooser = loser;
+
+    // 新增：記錄本局勝負資訊
+    matchResults.push({
+      game: currentGame,
+      winner: winner,
+      blue: sideToTeam.b,
+      red: sideToTeam.r
+    });
+
+    currentGame++;
+    document.getElementById("btnWinA").disabled = true;
+    document.getElementById("btnWinB").disabled = true;
+
+    if (score[winner] > Math.floor(maxGame / 2)) {
+      alert(`系列賽結束，獲勝隊伍：${winner === "A" ? teamAName : teamBName}`);
+      updateScoreboard();
+      updateHistory();
+      return;
+    }
+
+    resetForNextGame();
+    setupSideButtons();
+    document.getElementById("sideSelect").style.display = "block";
+    updateScoreboard();
+    updateHistory();
+
+  }
+
+  function updateScoreboard() {
+    document.getElementById("scoreBoard").innerText =
+      `${teamAName} ${score.A} : ${score.B} ${teamBName}`;
+  }
+
+  function resetForNextGame() {
+    selectedHeroes.clear();
+    picks = { b: [], r: [] };
+    bans = { b: [], r: [] };
+    phaseIndex = 0;
+    phaseActionCount = 0;
+    sideSelected = false;
+    isUltimate = false;
+    updateBPTable();
+  }
+
+
+function renderPhase() {
+  // 巔峰盲選條件（第七局 + 雙方3勝 + 有勾選巔峰）
+  const isSeventhGame = (currentGame === 7 && maxGame === 7 && score.A === 3 && score.B === 3);
+  const isBlind = useUltimateBattle && isSeventhGame;
+
+  // 若為巔峰對決盲選，跳過 Ban 階段
+  if (isBlind) {
+    while (phaseSequence[phaseIndex]?.action === "Ban") {
+      phaseIndex++;
+    }
+  }
+  const p = phaseSequence[phaseIndex];
+  if (!p) {
+    document.getElementById("bpStageInfo").innerText = "✅ BP 完成，請選擇勝隊";
+    document.getElementById("winnerSelect").style.display = "block";
+    document.getElementById("btnWinA").disabled = false;
+    document.getElementById("btnWinB").disabled = false;
+  } else {
+    const currentTeam = sideToTeam[p.team];
+    const teamName = currentTeam === "A" ? teamAName : teamBName;
+    document.getElementById("bpStageInfo").innerText =
+      `目前階段：${p.action}（${teamName}）`;
+    document.getElementById("winnerSelect").style.display = "none";
+    document.getElementById("btnWinA").disabled = true;
+    document.getElementById("btnWinB").disabled = true;
+  }
+}
+function renderHeroes() {
+  const phase = phaseSequence[phaseIndex]; 
+  const container = document.getElementById("heroes");
+  container.innerHTML = "";
+
+  const isSeventhGame = (currentGame === 7 && maxGame === 7 && score.A === 3 && score.B === 3);
+  const isBlind = useUltimateBattle && isSeventhGame;
+
+  heroes.forEach(hero => {
+    const div = document.createElement("div");
+    div.className = "hero";
+    div.innerText = hero;
+
+    if (!sideSelected) {
+      div.style.visibility = "hidden";
+      container.appendChild(div);
+      return;
+    }
+
+    const currentTeam = sideToTeam[phase?.team];
+    const currentSide = phase?.team;
+
+    const pickedThisGame = picks.b.includes(hero) || picks.r.includes(hero);
+    const bannedThisGame = bans.b.includes(hero) || bans.r.includes(hero);
+    const usedByThisTeam = allPicks[hero][currentTeam];
+    const usedByBoth = allPicks[hero].A && allPicks[hero].B;
+
+    let disable = false;
+
+    // 🟡 巔峰對決（盲選）：允許隊間重複，但隊內不可重複
+    if (isBlind) {
+      disable = picks[currentSide].includes(hero);
+    } 
+    // 🔵 第七局（非盲選）全開，不限制隊間重複
+    else if (isSeventhGame && !isBlind) {
+      disable = pickedThisGame || bannedThisGame;
+    }
+    // 🔴 一般局數（BP限制）
+    else {
+      if (phase?.action === "Pick") {
+        disable = pickedThisGame || bannedThisGame || usedByThisTeam || usedByBoth;
+      } else {
+        disable = pickedThisGame || bannedThisGame || usedByBoth;
+      }
+    }
+
+    if (disable) {
+      div.classList.add("used");
+      div.style.opacity = 0.4;
+      div.style.pointerEvents = "none";
+    } else {
+      div.onclick = () => handleHeroClick(hero);
+    }
+
+    container.appendChild(div);
+  });
+}
+
+function handleHeroClick(hero) {
+  const phase = phaseSequence[phaseIndex];
+  if (!phase) return;
+
+  const { team, action } = phase;
+  const teamKey = sideToTeam[team];
+
+  const isSeventhGame = (currentGame === 7 && maxGame === 7 && score.A === 3 && score.B === 3);
+  const isBlind = useUltimateBattle && isSeventhGame;
+
+  if (isBlind) {
+    if (picks[team].includes(hero)) return;
+    picks[team].push(hero);
+  } else {
+    if (selectedHeroes.has(hero)) return;
+    selectedHeroes.add(hero);
+  }
+
+  if (action === "Pick") {
+    picks[team].push(hero);
+  } else {
+    bans[team].push(hero);
+  }
+
+  updateBPTable();
+
+  phaseActionCount++;
+  if (phaseActionCount >= phase.count) {
+    phaseIndex++;
+    phaseActionCount = 0;
+  }
+
+  renderPhase();
+  renderHeroes();
+}
+
+function updateBPTable() {
+  // 更新藍方 Ban
+  for (let i = 0; i < 4; i++) {
+    const cell = document.getElementById(`blueBan${i + 1}`);
+    cell.innerText = bans.b[i] || "";
+  }
+
+  // 更新藍方 Pick
+  for (let i = 0; i < 5; i++) {
+    const cell = document.getElementById(`bluePick${i + 1}`);
+    cell.innerText = picks.b[i] || "";
+  }
+
+  // 更新紅方 Ban
+  for (let i = 0; i < 4; i++) {
+    const cell = document.getElementById(`redBan${i + 1}`);
+    cell.innerText = bans.r[i] || "";
+  }
+
+  // 更新紅方 Pick
+  for (let i = 0; i < 5; i++) {
+    const cell = document.getElementById(`redPick${i + 1}`);
+    cell.innerText = picks.r[i] || "";
+  }
+}
+
+function updateHistory() {
+  const history = document.getElementById("historyTable");
+  history.innerHTML = "";
+
+  const header = document.createElement("tr");
+  const homeName = teamAName;
+  const guestName = teamBName;
+
+  header.innerHTML = `
+    <th>${homeName} BAN</th><th>${homeName} PICK</th><th>${homeName} RESULT</th>
+    <th>GAME</th>
+    <th>${guestName} RESULT</th><th>${guestName} PICK</th><th>${guestName} BAN</th>
+  `;
+  history.appendChild(header);
+
+  matchResults.forEach((result, i) => {
+    const gameNum = i + 1;
+    const match = matchHistory[i];
+    const blue = result.blue;
+    const red = result.red;
+
+    const homeIsBlue = blue === "A";
+    const homeBan = homeIsBlue ? match.blueBan : match.redBan;
+    const homePick = homeIsBlue ? match.bluePick : match.redPick;
+    const guestBan = homeIsBlue ? match.redBan : match.blueBan;
+    const guestPick = homeIsBlue ? match.redPick : match.bluePick;
+
+    const homeResult = result.winner === "A" ? "WIN" : "LOSE";
+    const guestResult = result.winner === "B" ? "WIN" : "LOSE";
+
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td>${homeBan.map(h => `<span style="color:${homeIsBlue ? 'blue' : 'red'}">${h}</span>`).join(", ")}</td>
+      <td>${homePick.map(h => `<span style="color:${homeIsBlue ? 'blue' : 'red'}">${h}</span>`).join(", ")}</td>
+      <td>${homeResult}</td>
+      <td style="font-weight:bold;">${gameNum}</td>
+      <td>${guestResult}</td>
+      <td>${guestPick.map(h => `<span style="color:${homeIsBlue ? 'red' : 'blue'}">${h}</span>`).join(", ")}</td>
+      <td>${guestBan.map(h => `<span style="color:${homeIsBlue ? 'red' : 'blue'}">${h}</span>`).join(", ")}</td>
+    `;
+    history.appendChild(row);
+  });
+}
+
+  </script>
+</body>
+</html>
