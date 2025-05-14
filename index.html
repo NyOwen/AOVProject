@@ -14,7 +14,7 @@
         <option>FW</option><option>ONE</option><option>BMG</option><option>HKA</option><option>DCG</option><option>ANK</option>
         <option>EA</option><option>BAC</option><option>BRU</option><option>TLN</option><option>FS</option><option>PSG</option>
         <option>FPT</option><option>SGP</option><option>BOX</option><option>1S</option><option>SPN</option><option>TDT</option>
-        <option>CFX</option><option>OM</option>
+        <option>CSX</option><option>OM</option>
       </select>
     </label>
     <label>Guest:
@@ -22,7 +22,7 @@
         <option>FW</option><option>ONE</option><option>BMG</option><option>HKA</option><option>DCG</option><option>ANK</option>
         <option>EA</option><option>BAC</option><option>BRU</option><option>TLN</option><option>FS</option><option>PSG</option>
         <option>FPT</option><option>SGP</option><option>BOX</option><option>1S</option><option>SPN</option><option>TDT</option>
-        <option>CFX</option><option>OM</option>
+        <option>CSX</option><option>OM</option>
       </select>
     </label><br/>
     <label>BO
@@ -118,7 +118,11 @@
   <div id="resetSection">
     <button onclick="resetCurrentGame()">Reset The Game</button>
   </div>
-  
+
+  <div id="exportSection" style="display:none;">
+    <button onclick="exportToCSV()">匯出比賽結果</button>
+  </div>
+    
   
 
   <script>
@@ -270,6 +274,7 @@
     if (score[winner] > Math.floor(maxGame / 2)) {
       alert(`系列賽結束，獲勝隊伍：${winner === "A" ? teamAName : teamBName}`);
       updateScoreboard();
+      document.getElementById("exportSection").style.display = "block";
       updateHistory();
       return;
     }
@@ -489,7 +494,45 @@ function updateHistory() {
     history.appendChild(row);
   });
 }
+function exportToCSV() {
+  let csv = [];
+  csv.push(["Game", "Team", "Side", "Ban1", "Ban2", "Ban3", "Ban4", "Pick1", "Pick2", "Pick3", "Pick4", "Pick5", "Result"]);
 
+  matchResults.forEach((result, index) => {
+    const gameNum = index + 1;
+    const match = matchHistory[index];
+
+    // Blue side
+    const blueTeam = result.blue === "A" ? teamAName : teamBName;
+    const blueResult = result.winner === result.blue ? "WIN" : "LOSE";
+    csv.push([
+      gameNum, blueTeam, "Blue",
+      ...match.blueBan, ...Array(4 - match.blueBan.length).fill(""),
+      ...match.bluePick, ...Array(5 - match.bluePick.length).fill(""),
+      blueResult
+    ]);
+
+    // Red side
+    const redTeam = result.red === "A" ? teamAName : teamBName;
+    const redResult = result.winner === result.red ? "WIN" : "LOSE";
+    csv.push([
+      gameNum, redTeam, "Red",
+      ...match.redBan, ...Array(4 - match.redBan.length).fill(""),
+      ...match.redPick, ...Array(5 - match.redPick.length).fill(""),
+      redResult
+    ]);
+  });
+
+  // 建立 CSV 檔案
+  const csvContent = "data:text/csv;charset=utf-8," + csv.map(e => e.join(",")).join("\n");
+  const encodedUri = encodeURI(csvContent);
+  const link = document.createElement("a");
+  link.setAttribute("href", encodedUri);
+  link.setAttribute("download", "GCS2025_BP結果.csv");
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
   </script>
 </body>
 </html>
