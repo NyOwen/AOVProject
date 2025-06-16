@@ -207,6 +207,7 @@
     sideToTeam = side === "b" ? { b: team, r: team === "A" ? "B" : "A" }
                               : { r: team, b: team === "A" ? "B" : "A" };
     sideSelected = true;
+    updateScoreboard();
 
     isUltimate = (useUltimateBattle && currentGame === 7 &&  maxGame === 7 && score.A === 3 && score.B === 3);
 
@@ -276,6 +277,7 @@
     if (score[winner] > Math.floor(maxGame / 2)) {
       alert(`系列賽結束，獲勝隊伍：${winner === "A" ? teamAName : teamBName}`);
       updateScoreboard();
+      document.getElementById("resetRoundBtn").disabled = true;
       document.getElementById("exportSection").style.display = "block";
       updateHistory();
       return;
@@ -290,8 +292,13 @@
   }
 
   function updateScoreboard() {
+    let blueTeam = sideToTeam.b === "A" ? teamAName : teamBName;
+    let redTeam = sideToTeam.r === "B" ? teamBName : teamAName;
+    let blueScore = sideToTeam.b === "A" ? score.A : score.B;
+    let redScore = sideToTeam.r === "B" ? score.B : score.A;
+
     document.getElementById("scoreBoard").innerText =
-      `${teamAName} ${score.A} : ${score.B} ${teamBName}`;
+      ` ${blueTeam} ${blueScore} : ${redScore} ${redTeam} `;
   }
 
   function resetForNextGame() {
