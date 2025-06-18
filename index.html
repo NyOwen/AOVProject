@@ -241,6 +241,7 @@
   updateBPTable();
 
   // 隱藏勝負選擇，回到選角階段
+
   document.getElementById("winnerSelect").style.display = "none";
   document.getElementById("btnWinA").disabled = true;
   document.getElementById("btnWinB").disabled = true;
@@ -328,6 +329,7 @@ function renderPhase() {
   const p = phaseSequence[phaseIndex];
   if (!p) {
     document.getElementById("bpStageInfo").innerText = "✅ BP 完成，請選擇勝隊";
+    document.getElementById("heroSection").style.display = "none";
     document.getElementById("winnerSelect").style.display = "block";
     document.getElementById("btnWinA").disabled = false;
     document.getElementById("btnWinB").disabled = false;
@@ -336,6 +338,7 @@ function renderPhase() {
     const teamName = currentTeam === "A" ? teamAName : teamBName;
     document.getElementById("bpStageInfo").innerText =
       `目前階段：${p.action}（${teamName}）`;
+    document.getElementById("heroSection").style.display = "block";
     document.getElementById("winnerSelect").style.display = "none";
     document.getElementById("btnWinA").disabled = true;
     document.getElementById("btnWinB").disabled = true;
