@@ -174,6 +174,8 @@
   let matchHistory = [];
   let matchResults = [];
 
+  let swapSelection = null;
+
   function startSeries() {
     teamAName = document.getElementById("teamA").value;
     teamBName = document.getElementById("teamB").value;
@@ -241,7 +243,7 @@
   updateBPTable();
 
   // 隱藏勝負選擇，回到選角階段
-
+  swapSelection = null;
   document.getElementById("winnerSelect").style.display = "none";
   document.getElementById("btnWinA").disabled = true;
   document.getElementById("btnWinB").disabled = true;
@@ -283,7 +285,7 @@
       updateHistory();
       return;
     }
-
+    swapSelection = null;
     resetForNextGame();
     setupSideButtons();
     document.getElementById("sideSelect").style.display = "block";
@@ -449,6 +451,9 @@ function updateBPTable() {
   for (let i = 0; i < 5; i++) {
     const cell = document.getElementById(`bluePick${i + 1}`);
     cell.innerText = picks.b[i] || "";
+    cell.dataset.side = "b";
+    cell.dataset.index = i;
+    cell.onclick = handleSwapClick;
   }
 
   // 更新紅方 Ban
@@ -461,7 +466,45 @@ function updateBPTable() {
   for (let i = 0; i < 5; i++) {
     const cell = document.getElementById(`redPick${i + 1}`);
     cell.innerText = picks.r[i] || "";
+    cell.dataset.side = "r";
+    cell.dataset.index = i;
+    cell.onclick = handleSwapClick;
   }
+}
+
+function handleSwapClick(e) {
+  if (!swapSelection) {
+    swapSelection = e.currentTarget;
+    e.currentTarget.style.outline = "2px solid gold";
+    return;
+  }
+
+  const first = swapSelection;
+  const second = e.currentTarget;
+
+  // 不同隊伍不可交換
+  if (first.dataset.side !== second.dataset.side) {
+    alert("只能交換同一隊的英雄！");
+    first.style.outline = "";
+    swapSelection = null;
+    return;
+  }
+
+  const side = first.dataset.side;
+  const i1 = parseInt(first.dataset.index);
+  const i2 = parseInt(second.dataset.index);
+
+  // 交換內容
+  const temp = picks[side][i1];
+  picks[side][i1] = picks[side][i2];
+  picks[side][i2] = temp;
+
+  // 清除選取狀態與 UI
+  first.style.outline = "";
+  second.style.outline = "";
+  swapSelection = null;
+
+  updateBPTable(); // 重新渲染
 }
 
 function updateHistory() {
