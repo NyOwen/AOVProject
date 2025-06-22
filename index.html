@@ -264,6 +264,7 @@
     score[winner]++;
     const loser = winner === "A" ? "B" : "A";
     sideChooser = loser;
+    document.getElementById("bpStageInfo").innerText ="";
 
     // 新增：記錄本局勝負資訊
     matchResults.push({
@@ -330,7 +331,7 @@ function renderPhase() {
   }
   const p = phaseSequence[phaseIndex];
   if (!p) {
-    document.getElementById("bpStageInfo").innerText = "✅ BP 完成，請選擇勝隊";
+    document.getElementById("bpStageInfo").innerText = "BP 完成，請選擇同隊2名英雄進行交換(或重新BP)";
     document.getElementById("heroSection").style.display = "none";
     document.getElementById("winnerSelect").style.display = "block";
     document.getElementById("btnWinA").disabled = false;
@@ -339,7 +340,7 @@ function renderPhase() {
     const currentTeam = sideToTeam[p.team];
     const teamName = currentTeam === "A" ? teamAName : teamBName;
     document.getElementById("bpStageInfo").innerText =
-      `目前階段：${p.action}（${teamName}）`;
+      `Please ${teamName} ${p.action.toLowerCase()} ${p.count} Hero${p.count > 1 ? "es." : "."}`;
     document.getElementById("heroSection").style.display = "block";
     document.getElementById("winnerSelect").style.display = "none";
     document.getElementById("btnWinA").disabled = true;
