@@ -450,7 +450,8 @@ function updateBPTable() {
   // 更新藍方 Pick
   for (let i = 0; i < 5; i++) {
     const cell = document.getElementById(`bluePick${i + 1}`);
-    cell.innerText = picks.b[i] || "";
+    const hero = picks.b[i] || "";
+    cell.innerText = hero;
     cell.dataset.side = "b";
     cell.dataset.index = i;
     cell.onclick = handleSwapClick;
@@ -465,7 +466,8 @@ function updateBPTable() {
   // 更新紅方 Pick
   for (let i = 0; i < 5; i++) {
     const cell = document.getElementById(`redPick${i + 1}`);
-    cell.innerText = picks.r[i] || "";
+    const hero = picks.r[i] || "";
+    cell.innerText = hero;
     cell.dataset.side = "r";
     cell.dataset.index = i;
     cell.onclick = handleSwapClick;
