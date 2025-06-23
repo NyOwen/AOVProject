@@ -1,29 +1,10 @@
-body { font-family: sans-serif; text-align: center; background: #f0f0f0; }
-    
-    .hero.used { 
-    opacity: 0.4; 
-    pointer-events: none; 
-    }
-    
-    .bp-table {
-      border-collapse: collapse;
-      margin: 10px 0;
-    }
-    
-    .side-button { font-size: 18px; padding: 10px 20px; margin: 10px; }
-    #winnerSelect button { margin: 10px; padding: 10px 16px; font-size: 16px; }
-    #scoreBoard { font-size: 20px; margin: 10px; }
-
-    /* 英雄區塊：讓按鈕可換行排版 */
-#heroes {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 6px;
-  padding: 10px;
+body {
+  font-family: sans-serif;
+  text-align: center;
+  background: #f0f0f0;
 }
 
-/* 單一英雄按鈕微縮、適配觸控 */
+/* 英雄按鈕樣式 */
 .hero {
   display: flex;
   flex-direction: column;
@@ -33,10 +14,68 @@ body { font-family: sans-serif; text-align: center; background: #f0f0f0; }
   height: 72px;
   font-size: 13px;
   padding: 4px;
+  margin: 5px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background: white;
+  cursor: pointer;
   box-sizing: border-box;
 }
 
-/* 藍紅 BP 表格區：在手機上直排顯示 */
+.hero.used {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+/* 英雄容器 */
+#heroes {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px;
+}
+
+/* BP 表格樣式 */
+.bp-table {
+  border-collapse: collapse;
+  margin: 10px 0;
+}
+
+.bp-table td {
+  border: 1px solid #ccc;
+  padding: 6px 12px;
+  text-align: center;
+  width: 80px;
+  height: 40px;
+  font-size: 16px;
+}
+
+/* 按鈕樣式 */
+.side-button {
+  font-size: 18px;
+  padding: 10px 20px;
+  margin: 10px;
+}
+
+#winnerSelect button {
+  margin: 10px;
+  padding: 10px 16px;
+  font-size: 16px;
+}
+
+#scoreBoard {
+  font-size: 20px;
+  margin: 10px;
+}
+
+#bpStageInfo {
+  font-size: 18px;
+  margin-top: 12px;
+  padding: 4px;
+}
+
+/* 行動裝置適配 */
 @media (max-width: 768px) {
   #bpTableWrapper {
     flex-direction: column;
