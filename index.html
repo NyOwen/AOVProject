@@ -430,7 +430,7 @@ function renderPhase() {
   if (!p) {
     // BP 結束階段
     document.getElementById("bpStageInfo").innerText = "BP 完成，請選擇同隊2名英雄進行交換(或重新BP)";
-    document.getElementById("heroSection").style.display = "block"; // ✅ 改這裡：顯示英雄區塊！
+    document.getElementById("heroSection").style.display = "none"; // ✅ 改這裡：顯示英雄區塊！
     document.getElementById("winnerSelect").style.display = "block";
     document.getElementById("btnWinA").disabled = false;
     document.getElementById("btnWinB").disabled = false;
