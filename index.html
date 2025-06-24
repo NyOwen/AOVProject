@@ -181,6 +181,86 @@
 
   let swapSelection = null;
 
+  function saveProgress() {
+    const data = {
+      teamAName,
+      teamBName,
+      score,
+      currentGame,
+      maxGame,
+      sideChooser,
+      sideToTeam,
+      sideSelected,
+      useUltimateBattle,
+      isUltimate,
+      allPicks,
+      picks,
+      bans,
+      phaseIndex,
+      phaseActionCount,
+      matchHistory,
+      matchResults
+    };
+    localStorage.setItem("bpProgress", JSON.stringify(data));
+  }
+
+  function loadProgress() {
+  const saved = localStorage.getItem("bpProgress");
+  if (!saved) return;
+
+  try {
+    const data = JSON.parse(saved);
+
+    // 資料還原
+    teamAName = data.teamAName;
+    teamBName = data.teamBName;
+    score = data.score;
+    currentGame = data.currentGame;
+    maxGame = data.maxGame;
+    sideChooser = data.sideChooser;
+    sideToTeam = data.sideToTeam;
+    sideSelected = data.sideSelected;
+    useUltimateBattle = data.useUltimateBattle;
+    isUltimate = data.isUltimate;
+    allPicks = data.allPicks;
+    picks = data.picks;
+    bans = data.bans;
+    phaseIndex = data.phaseIndex;
+    phaseActionCount = data.phaseActionCount;
+    matchHistory = data.matchHistory || [];
+    matchResults = data.matchResults || [];
+
+    // 顯示 UI 區塊
+    document.getElementById("teamSelect").style.display = "none";
+    document.getElementById("sideSelect").style.display = "none";
+
+    // 更新畫面
+    updateScoreboard();
+    updateHistory();
+    updateBPTable();
+    renderPhase();          // ⬅️ 會正確處理英雄列表顯示（配合剛才修正）
+    renderHeroes();
+    setupVictoryButtons();
+    updateTeamLabels();
+
+    // 若已結束，顯示匯出
+    if (score.A > Math.floor(maxGame / 2) || score.B > Math.floor(maxGame / 2)) {
+      document.getElementById("exportSection").style.display = "block";
+    }
+
+  } catch (e) {
+    console.error("讀取進度失敗:", e);
+    localStorage.removeItem("bpProgress");
+  }
+}
+  function updateTeamLabels() {
+    const blueTeam = sideToTeam.b === "A" ? teamAName : teamBName;
+    const redTeam = sideToTeam.r === "A" ? teamAName : teamBName;
+
+    document.getElementById("blueTeamName").innerText = blueTeam;
+    document.getElementById("redTeamName").innerText = redTeam;
+  }
+
   function startSeries() {
     teamAName = document.getElementById("teamA").value;
     teamBName = document.getElementById("teamB").value;
@@ -200,6 +280,7 @@
     setupSideButtons();
     updateHistory();
     updateScoreboard();
+    saveProgress();
   }
 
 
@@ -227,6 +308,7 @@
     renderHeroes();
 
     document.getElementById("resetRoundBtn").disabled = false;
+    saveProgress();
   }
 
   function setupVictoryButtons() {
@@ -255,6 +337,7 @@
 
   renderPhase();
   renderHeroes();
+  saveProgress();
 }
 
   function setWinner(winner) {
@@ -289,6 +372,7 @@
       document.getElementById("resetRoundBtn").disabled = true;
       document.getElementById("exportSection").style.display = "block";
       updateHistory();
+      localStorage.removeItem("bpProgress");
       return;
     }
     swapSelection = null;
@@ -297,6 +381,7 @@
     document.getElementById("sideSelect").style.display = "block";
     updateScoreboard();
     updateHistory();
+    saveProgress();
 
   }
 
@@ -334,14 +419,23 @@ function renderPhase() {
       phaseIndex++;
     }
   }
+
   const p = phaseSequence[phaseIndex];
-  if (!p) {
-    document.getElementById("bpStageInfo").innerText = "BP 完成，請選擇同隊2名英雄進行交換(或重新BP)";
+
+  if (!sideSelected) {
     document.getElementById("heroSection").style.display = "none";
+    return;
+  }
+
+  if (!p) {
+    // BP 結束階段
+    document.getElementById("bpStageInfo").innerText = "BP 完成，請選擇同隊2名英雄進行交換(或重新BP)";
+    document.getElementById("heroSection").style.display = "block"; // ✅ 改這裡：顯示英雄區塊！
     document.getElementById("winnerSelect").style.display = "block";
     document.getElementById("btnWinA").disabled = false;
     document.getElementById("btnWinB").disabled = false;
   } else {
+    // BP 進行中階段
     const currentTeam = sideToTeam[p.team];
     const teamName = currentTeam === "A" ? teamAName : teamBName;
     document.getElementById("bpStageInfo").innerText =
@@ -444,6 +538,7 @@ function handleHeroClick(hero) {
 
   renderPhase();
   renderHeroes();
+  saveProgress();
 }
 
 function updateBPTable() {
@@ -564,7 +659,7 @@ function resetAll() {
   if (!confirmed) return;
 
   // 清除所有儲存
-  //localStorage.removeItem("bpProgress");
+  localStorage.removeItem("bpProgress");
 
   // 還原變數
   teamAName = "A隊";
@@ -642,6 +737,11 @@ function exportToCSV() {
   link.click();
   document.body.removeChild(link);
 }
+
+window.onload = function() {
+  //localStorage.removeItem("bpProgress");
+  loadProgress();
+};
   </script>
 </body>
 </html>
