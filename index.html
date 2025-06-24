@@ -120,6 +120,10 @@
     <button id="resetRoundBtn" onclick="resetCurrentGame()" disabled>本局重新BP</button>
   </div>
 
+  <div id="resetAllSection" style="margin-top: 20px;">
+    <button onclick="resetAll()">全場重置</button>
+  </div>
+
   <div id="exportSection" style="display:none;">
     <button onclick="exportToCSV()">匯出比賽結果</button>
   </div>
@@ -554,6 +558,49 @@ function updateHistory() {
     history.appendChild(row);
   });
 }
+
+function resetAll() {
+  const confirmed = confirm("確定要重置全場進度嗎？這將清除所有資料並重新開始！");
+  if (!confirmed) return;
+
+  // 清除所有儲存
+  //localStorage.removeItem("bpProgress");
+
+  // 還原變數
+  teamAName = "A隊";
+  teamBName = "B隊";
+  score = { A: 0, B: 0 };
+  currentGame = 0;
+  maxGame = 7;
+  sideChooser = "A";
+  sideToTeam = { b: "", r: "" };
+  sideSelected = false;
+  useUltimateBattle = false;
+  isUltimate = false;
+  phaseIndex = 0;
+  phaseActionCount = 0;
+  matchHistory = [];
+  matchResults = [];
+
+  // 清除英雄狀態
+  heroes.forEach(h => allPicks[h] = { A: false, B: false });
+  picks = { b: [], r: [] };
+  bans = { b: [], r: [] };
+  selectedHeroes.clear();
+
+  // 還原畫面
+  document.getElementById("teamSelect").style.display = "block";
+  document.getElementById("sideSelect").style.display = "none";
+  document.getElementById("heroSection").style.display = "none";
+  document.getElementById("winnerSelect").style.display = "none";
+  document.getElementById("exportSection").style.display = "none";
+  document.getElementById("scoreBoard").innerText = "";
+  document.getElementById("bpStageInfo").innerText = "";
+  document.getElementById("historyTable").innerHTML = "";
+
+  updateBPTable();
+}
+
 function exportToCSV() {
   let csv = [];
   csv.push(["Game", "Team", "Side", "Ban1", "Ban2", "Ban3", "Ban4", "Pick1", "Pick2", "Pick3", "Pick4", "Pick5", "Result"]);

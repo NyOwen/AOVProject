@@ -75,6 +75,16 @@ body {
   padding: 4px;
 }
 
+#resetAllSection button {
+  background-color: #d80c08;
+  color: white;
+  padding: 10px 16px;
+  border: none;
+  font-size: 16px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
 /* 行動裝置適配 */
 @media (max-width: 768px) {
   #bpTableWrapper {
