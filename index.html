@@ -232,7 +232,10 @@
 
     // 顯示 UI 區塊
     document.getElementById("teamSelect").style.display = "none";
-    document.getElementById("sideSelect").style.display = "none";
+    if (!sideSelected) {
+      document.getElementById("sideSelect").style.display = "block";
+      setupSideButtons();
+    }
 
     // 更新畫面
     updateScoreboard();
