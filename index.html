@@ -236,6 +236,9 @@
       document.getElementById("sideSelect").style.display = "block";
       setupSideButtons();
     }
+    else{
+      document.getElementById("resetRoundBtn").disabled = false;
+    }
 
     // 更新畫面
     updateScoreboard();
@@ -257,11 +260,17 @@
   }
 }
   function updateTeamLabels() {
+    const blueEl = document.getElementById("blueTeamName");
+    const redEl = document.getElementById("redTeamName");
+
+    // 防止空指針錯誤
+    if (!blueEl || !redEl) return;
+
     const blueTeam = sideToTeam.b === "A" ? teamAName : teamBName;
     const redTeam = sideToTeam.r === "A" ? teamAName : teamBName;
 
-    document.getElementById("blueTeamName").innerText = blueTeam;
-    document.getElementById("redTeamName").innerText = redTeam;
+    blueEl.innerText = blueTeam;
+    redEl.innerText = redTeam;
   }
 
   function startSeries() {
