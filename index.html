@@ -45,7 +45,7 @@
   <!-- LAST BP -->
   <div id="historySection">
   <h3>LAST BP</h3>
-  <table id="historyTable" border="1" style="margin: 0 auto; border-collapse: collapse;">
+  <table id="historyTable" border="1" style="margin: 0 auto; border-collapse: collapse; background-color: white;">
     <thead>
       <tr>
         <th id="thHomeBan">主隊 BAN</th>
@@ -68,15 +68,15 @@
 <div id="bpTableContainer">
   <div id="bpTableWrapper" style="display: flex; justify-content: center; gap: 40px;">
     <!-- Blue Side 表格 -->
-    <table class="bp-table">
+    <table class="bp-table" style="background-color: rgb(74, 246, 243);">
       <tr>
-        <td id="blueTitle">🔵 Blue Side</td>
-        <td id="blueBan1"></td>
-        <td id="blueBan2"></td>
-        <td id="blueBan3"></td>
-        <td id="blueBan4"></td>
+        <td id="blueTitle"> Blue Side</td>
+        <td id="blueBan1" style="color: rgb(100, 100, 100);"></td>
+        <td id="blueBan2" style="color: rgb(100, 100, 100);"></td>
+        <td id="blueBan3" style="color: rgb(100, 100, 100);"></td>
+        <td id="blueBan4" style="color: rgb(100, 100, 100);"></td>
       </tr>
-      <tr>
+      <tr style="color:blue">
         <td id="bluePick1"></td>
         <td id="bluePick2"></td>
         <td id="bluePick3"></td>
@@ -84,17 +84,16 @@
         <td id="bluePick5"></td>
       </tr>
     </table>
-
     <!-- Red Side 表格 -->
-    <table class="bp-table">
+    <table class="bp-table" style="background-color: rgb(255, 163, 97);">
       <tr>
-        <td id="redTitle">🔴 Red Side</td>
-        <td id="redBan1"></td>
-        <td id="redBan2"></td>
-        <td id="redBan3"></td>
-        <td id="redBan4"></td>
+        <td id="redTitle"> Red Side</td>
+        <td id="redBan1" style="color: rgb(100, 100, 100);"></td>
+        <td id="redBan2" style="color: rgb(100, 100, 100);"></td>
+        <td id="redBan3" style="color: rgb(100, 100, 100);"></td>
+        <td id="redBan4" style="color: rgb(100, 100, 100);"></td>
       </tr>
-      <tr>
+      <tr style="color: red;">
         <td id="redPick1"></td>
         <td id="redPick2"></td>
         <td id="redPick3"></td>
@@ -128,7 +127,7 @@
     <button onclick="exportToCSV()">匯出比賽結果</button>
   </div>
     
-  <footer id="footer">Ver 6.26 © 2025</footer>
+  <footer id="footer">Ver 6.28 © 2025</footer>
 
   <script>
    const heroes =["夜叉","塔拉","愛里","筱清","龍馬","艾蜜莉","美娜","麥克思","緋淚",
@@ -141,12 +140,12 @@
     "穆加爵","伊格","令月","圖倫","娜塔亞",
     "克里希","狄拉克","洛里昂","邦尼","盧蜜亞",
     "貂蟬","薇菈","阿萊斯特","依夏","金納",
-    "蘿兒","普雷塔","卡莉","達爾西","若伊",
+    "蘿兒","普雷塔","卡莉","達爾西","若伊","安奈特",
     "勇","森圖爾特","卡芬妮","亥犽","特爾安娜絲",
     "凡恩","堇","蘇","靈靈","史蘭茲","緹莉",
     "艾琳","拉維爾","摩恩","希露卡","索文",
     "菲尼克","琳蒂","瀾","海倫","愛麗絲","朵莉亞",
-    "卡瑞茲","明世隱","安奈特","芽芽","皮皮",
+    "卡瑞茲","明世隱","芽芽","皮皮",
     "薩尼","哥德爾","牛魔王","提米","朗博",
     "伯頓","克萊斯","查戈納爾","夸克","古木",
     "歐米茄","艾瑞","渥馬爾","維羅","阿杜恩",
@@ -313,8 +312,8 @@
 
     document.getElementById("sideSelect").style.display = "none";
     document.getElementById("heroSection").style.display = "block";
-    document.getElementById("blueTitle").innerText = `🔵 ${sideToTeam.b === "A" ? teamAName : teamBName}`;
-    document.getElementById("redTitle").innerText = `🔴 ${sideToTeam.r === "A" ? teamAName : teamBName}`;
+    document.getElementById("blueTitle").innerText = ` ${sideToTeam.b === "A" ? teamAName : teamBName}`;
+    document.getElementById("redTitle").innerText = ` ${sideToTeam.r === "A" ? teamAName : teamBName}`;
     setupVictoryButtons();
     renderPhase();
     renderHeroes();
@@ -441,7 +440,7 @@ function renderPhase() {
 
   if (!p) {
     // BP 結束階段
-    document.getElementById("bpStageInfo").innerText = "BP 完成，請選擇同隊2名英雄進行交換(或重新BP)";
+    document.getElementById("bpStageInfo").innerText = "最後調整，選擇同隊2名英雄可進行交換";
     document.getElementById("heroSection").style.display = "none"; // ✅ 改這裡：顯示英雄區塊！
     document.getElementById("winnerSelect").style.display = "block";
     document.getElementById("btnWinA").disabled = false;
