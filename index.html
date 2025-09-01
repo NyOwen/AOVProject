@@ -17,6 +17,7 @@
         
       </select>
     </label>
+    </br>
     <label>Guest:
       <select id="teamB">
         <option>FW</option><option>ONE</option><option>BMG</option><option>HKA</option><option>DCG</option><option>ANK</option>
@@ -24,8 +25,8 @@
         
       </select>
     </label><br/>
-    <label>BO
-      <select id="boMode"><option value="3">3</option><option value="5">5</option><option value="7" selected>7</option></select>
+    <label>MODE:
+      <select id="boMode"><option value="3">BO3</option><option value="5">BO5</option><option value="7" selected>BO7</option></select>
     </label>
     <br/>
     <button onclick="startSeries()">MATCH START</button>
@@ -107,7 +108,7 @@
   </div>
 
   <!-- 勝負選擇 -->
-  <div id="winnerSelect" style="display:none;">
+  <div id="winnerSelect" style=color:#fff;>
     <h3>請選擇本局獲勝隊伍：</h3>
     <button id="btnWinA"></button>
     <button id="btnWinB"></button>
