@@ -27,7 +27,7 @@
     <label>BO
       <select id="boMode"><option value="3">3</option><option value="5">5</option><option value="7" selected>7</option></select>
     </label>
-    <label><input type="checkbox" id="ultimateCheck" /> Ultimate Battle（BO7中第7局盲選）</label><br/>
+    <br/>
     <button onclick="startSeries()">MATCH START</button>
   </div>
 
@@ -125,7 +125,7 @@
     <button onclick="exportToCSV()">匯出比賽結果</button>
   </div>
     
-  <footer id="footer">Ver 7.27 © 2025</footer>
+  <footer id="footer">Ver 9.01 © 2025</footer>
 
   <script>
    const heroes =["夜叉","塔拉","愛里","筱清","龍馬","艾蜜莉","美娜","麥克思","緋淚",
@@ -169,8 +169,6 @@
   heroes.forEach(h => allPicks[h] = { A: false, B: false });
   let picks = { b: [], r: [] }, bans = { b: [], r: [] };
   const selectedHeroes = new Set();
-  let useUltimateBattle = false;
-  let isUltimate = false;
 
   let phaseIndex = 0, phaseActionCount = 0;
   let matchHistory = [];
@@ -188,8 +186,6 @@
       sideChooser,
       sideToTeam,
       sideSelected,
-      useUltimateBattle,
-      isUltimate,
       allPicks,
       picks,
       bans,
@@ -217,8 +213,6 @@
     sideChooser = data.sideChooser;
     sideToTeam = data.sideToTeam;
     sideSelected = data.sideSelected;
-    useUltimateBattle = data.useUltimateBattle;
-    isUltimate = data.isUltimate;
     allPicks = data.allPicks;
     picks = data.picks;
     bans = data.bans;
@@ -274,7 +268,6 @@
     teamAName = document.getElementById("teamA").value;
     teamBName = document.getElementById("teamB").value;
     maxGame = parseInt(document.getElementById("boMode").value);
-    useUltimateBattle = document.getElementById("ultimateCheck").checked;
 
     if (teamAName === teamBName) {
       alert("請選擇不同隊伍！");
@@ -305,8 +298,6 @@
                               : { r: team, b: team === "A" ? "B" : "A" };
     sideSelected = true;
     updateScoreboard();
-
-    isUltimate = (useUltimateBattle && currentGame === 7 &&  maxGame === 7 && score.A === 3 && score.B === 3);
 
     document.getElementById("sideSelect").style.display = "none";
     document.getElementById("heroSection").style.display = "block";
@@ -411,7 +402,6 @@
     phaseIndex = 0;
     phaseActionCount = 0;
     sideSelected = false;
-    isUltimate = false;
     updateBPTable();
     document.getElementById("resetRoundBtn").disabled = true;
   }
@@ -420,14 +410,6 @@
 function renderPhase() {
   // 巔峰盲選條件（第七局 + 雙方3勝 + 有勾選巔峰）
   const isSeventhGame = (currentGame === 7 && maxGame === 7 && score.A === 3 && score.B === 3);
-  const isBlind = useUltimateBattle && isSeventhGame;
-
-  // 若為巔峰對決盲選，跳過 Ban 階段
-  if (isBlind) {
-    while (phaseSequence[phaseIndex]?.action === "Ban") {
-      phaseIndex++;
-    }
-  }
 
   const p = phaseSequence[phaseIndex];
 
@@ -461,7 +443,6 @@ function renderHeroes() {
   container.innerHTML = "";
 
   const isSeventhGame = (currentGame === 7 && maxGame === 7 && score.A === 3 && score.B === 3);
-  const isBlind = useUltimateBattle && isSeventhGame;
 
   heroes.forEach(hero => {
     const div = document.createElement("div");
@@ -484,12 +465,8 @@ function renderHeroes() {
 
     let disable = false;
 
-    // 🟡 巔峰對決（盲選）：允許隊間重複，但隊內不可重複
-    if (isBlind) {
-      disable = picks[currentSide].includes(hero);
-    } 
     // 🔵 第七局（非盲選）全開，不限制隊間重複
-    else if (isSeventhGame && !isBlind) {
+    if (isSeventhGame) {
       disable = pickedThisGame || bannedThisGame;
     }
     // 🔴 一般局數（BP限制）
@@ -521,15 +498,11 @@ function handleHeroClick(hero) {
   const teamKey = sideToTeam[team];
 
   const isSeventhGame = (currentGame === 7 && maxGame === 7 && score.A === 3 && score.B === 3);
-  const isBlind = useUltimateBattle && isSeventhGame;
 
-  if (isBlind) {
-    if (picks[team].includes(hero)) return;
-    picks[team].push(hero);
-  } else {
-    if (selectedHeroes.has(hero)) return;
-    selectedHeroes.add(hero);
-  }
+  
+  if (selectedHeroes.has(hero)) return;
+  selectedHeroes.add(hero);
+
 
   if (action === "Pick") {
     picks[team].push(hero);
@@ -679,8 +652,6 @@ function resetAll() {
   sideChooser = "A";
   sideToTeam = { b: "", r: "" };
   sideSelected = false;
-  useUltimateBattle = false;
-  isUltimate = false;
   phaseIndex = 0;
   phaseActionCount = 0;
   matchHistory = [];
