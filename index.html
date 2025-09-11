@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>APL 2025 </title>
+  <title>AOV 2025 </title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -126,7 +126,7 @@
     <button onclick="exportToCSV()">匯出比賽結果</button>
   </div>
     
-  <footer id="footer">Ver 9.01 © 2025</footer>
+  <footer id="footer">Ver 9.11 © 2025</footer>
 
   <script>
    const heroes =["夜叉","塔拉","愛里","筱清","龍馬","艾蜜莉","美娜","麥克思","緋淚",
@@ -342,6 +342,12 @@
 }
 
   function setWinner(winner) {
+    const bpFinished = phaseIndex >= phaseSequence.length;
+    if (!sideSelected || !bpFinished) {
+      console.warn("未完成選邊或BP流程，不可設定勝負");
+      return;
+    }
+
     picks.b.forEach(h => { allPicks[h][sideToTeam.b] = true; });
     picks.r.forEach(h => { allPicks[h][sideToTeam.r] = true; });
     matchHistory.push({
@@ -409,35 +415,47 @@
 
 
 function renderPhase() {
-  // 巔峰盲選條件（第七局 + 雙方3勝 + 有勾選巔峰）
-  const isSeventhGame = (currentGame === 7 && maxGame === 7 && score.A === 3 && score.B === 3);
+const p = phaseSequence[phaseIndex];
+const bpFinished = phaseIndex >= phaseSequence.length;
+const sideDone = !!sideSelected;
 
-  const p = phaseSequence[phaseIndex];
 
-  if (!sideSelected) {
-    document.getElementById("heroSection").style.display = "none";
-    return;
-  }
-
-  if (!p) {
-    // BP 結束階段
-    document.getElementById("bpStageInfo").innerText = "最後調整，選擇同隊2名英雄可進行交換";
-    document.getElementById("heroSection").style.display = "none"; // ✅ 改這裡：顯示英雄區塊！
-    document.getElementById("winnerSelect").style.display = "block";
-    document.getElementById("btnWinA").disabled = false;
-    document.getElementById("btnWinB").disabled = false;
-  } else {
-    // BP 進行中階段
-    const currentTeam = sideToTeam[p.team];
-    const teamName = currentTeam === "A" ? teamAName : teamBName;
-    document.getElementById("bpStageInfo").innerText =
-      `Please ${teamName} ${p.action.toLowerCase()} ${p.count} Hero${p.count > 1 ? "es." : "."}`;
-    document.getElementById("heroSection").style.display = "block";
-    document.getElementById("winnerSelect").style.display = "none";
-    document.getElementById("btnWinA").disabled = true;
-    document.getElementById("btnWinB").disabled = true;
-  }
+if (!sideDone) {
+document.getElementById("heroSection").style.display = "none";
+document.getElementById("winnerSelect").style.display = "none";
+return;
 }
+
+
+if (bpFinished) {
+if (picks.b.length === 5 && picks.r.length === 5) {
+document.getElementById("bpStageInfo").innerText =
+"最後調整：可交換同隊 2 名英雄（完成後請決定勝負）";
+document.getElementById("heroSection").style.display = "none";
+document.getElementById("winnerSelect").style.display = "block";
+document.getElementById("btnWinA").disabled = false;
+document.getElementById("btnWinB").disabled = false;
+} else {
+document.getElementById("bpStageInfo").innerText = "BP 進行中...";
+document.getElementById("winnerSelect").style.display = "none";
+document.getElementById("btnWinA").disabled = true;
+document.getElementById("btnWinB").disabled = true;
+}
+return;
+}
+
+
+// 進行中階段
+const currentTeam = sideToTeam[p.team];
+const teamName = currentTeam === "A" ? teamAName : teamBName;
+document.getElementById("bpStageInfo").innerText =
+`Please ${teamName} ${p.action.toLowerCase()} ${p.count} Hero${p.count > 1 ? "s" : ""}`;
+document.getElementById("heroSection").style.display = "block";
+document.getElementById("winnerSelect").style.display = "none";
+document.getElementById("btnWinA").disabled = true;
+document.getElementById("btnWinB").disabled = true;
+}
+
 function renderHeroes() {
   const phase = phaseSequence[phaseIndex]; 
   const container = document.getElementById("heroes");
