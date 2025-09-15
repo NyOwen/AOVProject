@@ -71,6 +71,13 @@ body {
   font-size: 40px;
   margin: 10px;
 }
+#bpTableContainer {
+  position: sticky;
+  top: 0;                     /* 固定在視窗上方 */
+  background: rgba(129, 129, 129, 0.5);  /* 半透明黑底，避免被背景干擾 */
+  z-index: 1000;              /* 確保浮在其他元素之上 */
+  padding: 10px 0;
+}
 
 #bpStageInfo {
   color:#fff;
