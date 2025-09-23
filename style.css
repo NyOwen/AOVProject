@@ -71,25 +71,24 @@ body {
   font-size: 40px;
   margin: 10px;
 }
-#bpTableContainer {
+#bpStageInfo {
   position: sticky;
-  top: 0;                     /* 固定在視窗上方 */
-  background: rgba(129, 129, 129, 0.5);  /* 半透明黑底，避免被背景干擾 */
-  z-index: 1000;              /* 確保浮在其他元素之上 */
-  padding: 10px 0;
+  top: 0;                     /* 固定在最上方 */
+  background: rgba(0, 0, 0, 0.25);
+  color: #ffff42;
+  font-size: 25px;
+  margin: 0;                  /* 避免推擠 */
+  padding: 8px;
+  text-align: center;
+  z-index: 1100;              /* 比表格高，確保在上層 */
 }
 
-#bpStageInfo {
-  color:#fff;
-  font-size: 25px;
-  margin-top: 12px;
-  padding: 4px;
-  text-shadow:
-    -1px -1px 0 #000,  
-     1px -1px 0 #000,
-    -1px  1px 0 #000,
-     1px  1px 0 #000;
-
+#bpTableContainer {
+  position: sticky;
+  top: 50px;                  /* 緊接在 #bpStageInfo 下方 (依 #bpStageInfo 高度調整) */
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  padding: 10px 0;
 }
 
 #resetAllSection button {
