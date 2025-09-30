@@ -125,7 +125,7 @@
     <button onclick="exportToCSV()">匯出比賽結果</button>
   </div>
     
-  <footer id="footer">Ver 9.27 © 2025</footer>
+  <footer id="footer">Ver 9.30 © 2025</footer>
 
   <script>
     const heroes =[
@@ -150,7 +150,7 @@
       "歐米茄","艾瑞","渥馬爾","維羅","阿杜恩",
       "超人","贊尼爾","諾可西","莫托斯","銀晝","馬洛斯"
     ];
-    /*const roles={
+    const heroRoles={
       "夜叉":"DSL","塔拉":"DSL","愛里":"DSL","筱清":"DSL","龍馬":"DSL","艾蜜莉":"DSL","美娜":"DSL","麥克思":"DSL","緋淚":"DSL",
       "弗洛倫":"DSL","司科德":"DSL","葉娜":"DSL","司空震":"DSL","狂鐵":"DSL","貝揚":"DSL","夏洛特":"DSL","凱格路士":"DSL",
       "瑞克":"DSL","亞連":"DSL","艾翠絲":"DSL","夜姬":"DSL","莫拉":"DSL","瑪迦":"DSL","阿塔":"DSL","呂布":"DSL",
@@ -172,7 +172,7 @@
       "伯頓":"SUP","克萊斯":"SUP","查戈納爾":"SUP","夸克":"SUP","古木":"SUP",
       "歐米茄":"SUP","艾瑞":"SUP","渥馬爾":"SUP","維羅":"SUP","阿杜恩":"SUP",
       "超人":"SUP","贊尼爾":"SUP","諾可西":"SUP","莫托斯":"SUP","銀晝":"SUP","馬洛斯":"SUP"
-    }*/
+    }
     const phaseSequence = [
       { team: "b", action: "Ban", count: 1 }, { team: "r", action: "Ban", count: 1 },
       { team: "b", action: "Ban", count: 1 }, { team: "r", action: "Ban", count: 1 },
@@ -246,13 +246,17 @@
     matchHistory = data.matchHistory || [];
     matchResults = data.matchResults || [];
 
+    // 🟡 重建 selectedHeroes（當局已經選 / 禁英雄）
+    selectedHeroes.clear();
+    Object.values(picks).forEach(arr => arr.forEach(h => selectedHeroes.add(h)));
+    Object.values(bans).forEach(arr => arr.forEach(h => selectedHeroes.add(h)));
+
     // 顯示 UI 區塊
     document.getElementById("teamSelect").style.display = "none";
     if (!sideSelected) {
       document.getElementById("sideSelect").style.display = "block";
       setupSideButtons();
-    }
-    else{
+    } else {
       document.getElementById("resetRoundBtn").disabled = false;
     }
 
@@ -260,7 +264,7 @@
     updateScoreboard();
     updateHistory();
     updateBPTable();
-    renderPhase();          // ⬅️ 會正確處理英雄列表顯示（配合剛才修正）
+    renderPhase();
     renderHeroes();
     setupVictoryButtons();
     updateTeamLabels();
@@ -275,6 +279,7 @@
     localStorage.removeItem("bpProgress");
   }
 }
+
   function updateTeamLabels() {
     const blueEl = document.getElementById("blueTeamName");
     const redEl = document.getElementById("redTeamName");
@@ -481,56 +486,60 @@ document.getElementById("btnWinB").disabled = true;
 }
 
 function renderHeroes() {
-  const phase = phaseSequence[phaseIndex]; 
   const container = document.getElementById("heroes");
-  /*const roles = ["DSL", "JUG", "MID", "ADL", "SUP"];*/
   container.innerHTML = "";
 
-  const isSeventhGame = (currentGame === 7 && maxGame === 7 && score.A === 3 && score.B === 3);
+  // 非 BP 階段不顯示
+  if (!sideSelected || phaseIndex >= phaseSequence.length) {
+    container.style.display = "none";
+    return;
+  } else {
+    container.style.display = "block";
+  }
 
-  heroes.forEach(hero => {
-    const div = document.createElement("div");
-    div.className = "hero";
-    div.innerText = hero;
+  const roles = ["DSL", "JUG", "MID", "ADL", "SUP"];
+  const p = phaseSequence[phaseIndex];
+  const currentTeam = sideToTeam[p.team]; // A or B
+  const isSeventhGame = (maxGame === 7 && currentGame === 7);
 
-    if (!sideSelected) {
-      div.style.visibility = "hidden";
-      container.appendChild(div);
-      return;
-    }
+  roles.forEach(role => {
+    const section = document.createElement("div");
+    section.className = "hero-section";
 
-    const currentTeam = sideToTeam[phase?.team];
-    const currentSide = phase?.team;
+    const title = document.createElement("h3");
+    title.innerText = role;
+    section.appendChild(title);
 
-    const pickedThisGame = picks.b.includes(hero) || picks.r.includes(hero);
-    const bannedThisGame = bans.b.includes(hero) || bans.r.includes(hero);
-    const usedByThisTeam = allPicks[hero][currentTeam];
-    const usedByBoth = allPicks[hero].A && allPicks[hero].B;
+    const grid = document.createElement("div");
+    grid.className = "hero-grid";
 
-    let disable = false;
+    heroes.filter(h => heroRoles[h] === role).forEach(hero => {
+      const btn = document.createElement("button");
+      btn.innerText = hero;
+      btn.className = "hero"; // 保持現有樣式
 
-    // 🔵 第七局（非盲選）全開，不限制隊間重複
-    if (isSeventhGame) {
-      disable = pickedThisGame || bannedThisGame;
-    }
-    // 🔴 一般局數（BP限制）
-    else {
-      if (phase?.action === "Pick") {
-        disable = pickedThisGame || bannedThisGame || usedByThisTeam || usedByBoth;
-      } else {
-        disable = pickedThisGame || bannedThisGame || usedByBoth;
+      let disable = false;
+
+      if (!isSeventhGame) {
+        if (p.action === "Pick" && allPicks[hero][currentTeam]) {
+          disable = true; // 全局限制（Pick）
+        }
       }
-    }
+      if (selectedHeroes.has(hero)) {
+        disable = true; // 當局限制
+      }
 
-    if (disable) {
-      div.classList.add("used");
-      div.style.opacity = 0.4;
-      div.style.pointerEvents = "none";
-    } else {
-      div.onclick = () => handleHeroClick(hero);
-    }
+      if (disable) {
+        btn.disabled = true;
+      } else {
+        btn.onclick = () => handleHeroClick(hero);
+      }
 
-    container.appendChild(div);
+      grid.appendChild(btn);
+    });
+
+    section.appendChild(grid);
+    container.appendChild(section);
   });
 }
 
