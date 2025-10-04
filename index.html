@@ -9,22 +9,16 @@
 <body>
   <h1>GCS 2025 夏季賽</h1>
   <h2>Regular Season </h2>
-  <div id="teamSelect">
-    <label>Home:
-      <select id="teamA">
-        <option>FW</option><option>ONE</option><option>BMG</option><option>HKA</option><option>DCG</option><option>ANK</option>
-        
-        
-      </select>
-    </label>
-    </br>
-    <label>Guest:
-      <select id="teamB">
-        <option>FW</option><option>ONE</option><option>BMG</option><option>HKA</option><option>DCG</option><option>ANK</option>
-        
-        
-      </select>
-    </label><br/>
+  <div id="teamSelect" style="font-size: 20px;">
+    
+    <select id="teamA" style="color: blue;">
+      <option>TEAM 1</option><option> FW</option><option>ONE</option><option>BMG</option><option>HKA</option><option>DCG</option><option>ANK</option>       
+    </select>   
+    <label> V.S </label>        
+    <select id="teamB" style="color: red;">
+      <option>TEAM 2</option><option> FW</option><option>ONE</option><option>BMG</option><option>HKA</option><option>DCG</option><option>ANK</option>       
+    </select>
+    <br/>
     <label>MODE:
       <select id="boMode"><option value="3">BO3</option><option value="5">BO5</option><option value="7" selected>BO7</option></select>
     </label>
@@ -125,7 +119,7 @@
     <button onclick="exportToCSV()">匯出比賽結果</button>
   </div>
     
-  <footer id="footer">Ver 9.30 © 2025</footer>
+  <footer id="footer">Ver 10.04 © 2025</footer>
 
   <script>
     const heroes =[
@@ -428,7 +422,7 @@
     let redScore = sideToTeam.r === "B" ? score.B : score.A;
 
     document.getElementById("scoreBoard").innerText =
-      ` ${blueTeam} ${blueScore} : ${redScore} ${redTeam} `;
+      ` ${blueTeam} ${blueScore}-${redScore} ${redTeam} `;
   }
 
   function resetForNextGame() {
@@ -459,7 +453,7 @@ return;
 if (bpFinished) {
 if (picks.b.length === 5 && picks.r.length === 5) {
 document.getElementById("bpStageInfo").innerText =
-"最後調整：可交換同隊 2 名英雄（完成後請決定勝負）";
+  `FINALIZE : GAME ${currentGame}`;
 document.getElementById("heroSection").style.display = "none";
 document.getElementById("winnerSelect").style.display = "block";
 document.getElementById("btnWinA").disabled = false;
