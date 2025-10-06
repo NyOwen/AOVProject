@@ -119,7 +119,7 @@
     <button onclick="exportToCSV()">匯出比賽結果</button>
   </div>
     
-  <footer id="footer">Ver 10.04 © 2025</footer>
+  <footer id="footer">Ver 10.06 © 2025</footer>
 
   <script>
     const heroes =[
@@ -344,7 +344,9 @@
     btnB.onclick = () => setWinner("B");
   }
   function resetCurrentGame() {
-
+  if (!confirm("確定本局重新開始嗎？")) {
+    return; // 使用者按「取消」就不執行後續
+  }
   // 清除該局內部紀錄（不影響全局記錄）
   selectedHeroes.clear();
   picks = { b: [], r: [] };
@@ -352,6 +354,10 @@
   phaseIndex = 0;
   phaseActionCount = 0;
   updateBPTable();
+  sideSelected = false;
+  document.getElementById("sideSelect").style.display = "block";
+  document.getElementById("bpStageInfo").innerText = "";
+  setupSideButtons();
 
   // 隱藏勝負選擇，回到選角階段
   swapSelection = null;
