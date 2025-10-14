@@ -8,7 +8,7 @@
 </head>
 <body>
   <h1>GCS 2025 夏季賽</h1>
-  <h2>Regular Season </h2>
+  <h2>Playoffs </h2>
   <div id="teamSelect" style="font-size: 20px;">
     
     <select id="teamA" style="color: blue;">
@@ -32,9 +32,6 @@
     <button class="side-button" id="btnBlue">🔵 Blue Side</button>
     <button class="side-button" id="btnRed">🔴 Red Side</button>
   </div>
-
-  <!-- 比分顯示 -->
-  <div id="scoreBoard"></div>
   <!-- LAST BP -->
   <div id="historySection">
   <h3>LAST BP</h3>
@@ -53,6 +50,8 @@
     <tbody id="historyBody"></tbody>
   </table>
 </div>
+<!-- 比分顯示 -->
+  <div id="scoreBoard"></div>
 
   <!-- BP階段說明提示文字 -->
 <div id="bpStageInfo"></div>
@@ -119,7 +118,7 @@
     <button onclick="exportToCSV()">匯出比賽結果</button>
   </div>
     
-  <footer id="footer">Ver 10.06 © 2025</footer>
+  <footer id="footer">Ver 10.14 © 2025</footer>
 
   <script>
     const heroes =[
@@ -762,7 +761,7 @@ function exportToCSV() {
   });
 
   const cleanName = name => name.replace(/[^\w\u4e00-\u9fa5]/g, "");
-  const fileName = `${cleanName(teamAName)}vs${cleanName(teamBName)}.csv`;
+  const fileName = `Playoffs_${cleanName(teamAName)}vs${cleanName(teamBName)}.csv`;
   // 建立 CSV 檔案
   const csvContent = "data:text/csv;charset=utf-8," + csv.map(e => e.join(",")).join("\n");
   const encodedUri = encodeURI(csvContent);
