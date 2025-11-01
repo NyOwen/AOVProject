@@ -17,9 +17,9 @@ body {
   font-size: 14px;
   padding: 4px;
   margin: 5px;
-  border: 1px solid #ccc;
+  border: 1px solid #000000;
   border-radius: 6px;
-  background: white;
+  background: yellow;
   cursor: pointer;
   box-sizing: border-box;
 }
@@ -140,12 +140,12 @@ body {
     justify-content: center;
     width: 72px;
     height: 48px;
-    font-size: 14px;
+    font-size: 16px;
     padding: 4px;
     margin: 5px;
-    border: 1px solid #ccc;
+    border: 1px solid #000000;
     border-radius: 6px;
-    background: white;
+    background: yellow;
     cursor: pointer;
     box-sizing: border-box;
   }
