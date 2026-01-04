@@ -7,8 +7,8 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>GCS 2025 夏季賽</h1>
-  <h2>Grand Final </h2>
+  <h1>GCS 2026 春季賽</h1>
+  <h2>例行賽 </h2>
   <div id="teamSelect" style="font-size: 20px;">
     
     <select id="teamA" style="color: blue;">
@@ -60,7 +60,7 @@
 <div id="bpTableContainer">
   <div id="bpTableWrapper" style="display: flex; justify-content: center; gap: 40px;">
     <!-- Blue Side 表格 -->
-    <table class="bp-table" style="background-color: rgb(212, 175, 55);">
+    <table class="bp-table" style="background-color: rgb(74, 246, 243);">
       <tr>
         <td id="blueTitle"> Blue Side</td>
         <td id="blueBan1" style="color: rgb(100, 100, 100);"></td>
@@ -77,7 +77,7 @@
       </tr>
     </table>
     <!-- Red Side 表格 -->
-    <table class="bp-table" style="background-color: rgb(238, 217, 182);">
+    <table class="bp-table" style="background-color: rgb(255, 163, 97);">
       <tr>
         <td id="redTitle"> Red Side</td>
         <td id="redBan1" style="color: rgb(100, 100, 100);"></td>
@@ -761,7 +761,7 @@ function exportToCSV() {
   });
 
   const cleanName = name => name.replace(/[^\w\u4e00-\u9fa5]/g, "");
-  const fileName = `Finals_${cleanName(teamAName)}vs${cleanName(teamBName)}.csv`;
+  const fileName = `${cleanName(teamAName)}vs${cleanName(teamBName)}.csv`;
   // 建立 CSV 檔案
   const csvContent = "data:text/csv;charset=utf-8," + csv.map(e => e.join(",")).join("\n");
   const encodedUri = encodeURI(csvContent);
