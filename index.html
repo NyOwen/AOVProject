@@ -725,6 +725,8 @@ function resetAll() {
 function exportToCSV() {
   let csv = [];
   csv.push(["Game", "Team", "Side", "Ban1", "Ban2", "Ban3", "Ban4", "Pick1", "Pick2", "Pick3", "Pick4", "Pick5", "Result"]);
+  const teamARows = [];
+  const teamBRows = [];
 
   matchResults.forEach((result, index) => {
     const gameNum = index + 1;
@@ -733,23 +735,38 @@ function exportToCSV() {
     // Blue side
     const blueTeam = result.blue === "A" ? teamAName : teamBName;
     const blueResult = result.winner === result.blue ? "WIN" : "LOSE";
-    csv.push([
+    const blueRow = [
       gameNum, blueTeam, "Blue",
       ...match.blueBan, ...Array(4 - match.blueBan.length).fill(""),
       ...match.bluePick, ...Array(5 - match.bluePick.length).fill(""),
       blueResult
-    ]);
+    ];
+
+    if (blueTeam === teamAName) {
+      teamARows.push(blueRow);
+    } else {
+      teamBRows.push(blueRow);
+    }
 
     // Red side
     const redTeam = result.red === "A" ? teamAName : teamBName;
     const redResult = result.winner === result.red ? "WIN" : "LOSE";
-    csv.push([
+    const redRow = [
       gameNum, redTeam, "Red",
       ...match.redBan, ...Array(4 - match.redBan.length).fill(""),
       ...match.redPick, ...Array(5 - match.redPick.length).fill(""),
       redResult
-    ]);
+    ];
+
+    if (redTeam === teamAName) {
+      teamARows.push(redRow);
+    } else {
+      teamBRows.push(redRow);
+    }
   });
+
+  csv.push(...teamARows);
+  csv.push(...teamBRows);
 
   const cleanName = name => name.replace(/[^\w\u4e00-\u9fa5]/g, "");
   const fileName = `${cleanName(teamAName)}vs${cleanName(teamBName)}.csv`;
