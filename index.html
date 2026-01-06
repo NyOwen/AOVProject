@@ -20,7 +20,7 @@
     </select>
     <br/>
     <label>MODE:
-      <select id="boMode"><option value="3">BO3</option><option value="5">BO5</option><option value="7" selected>BO7</option></select>
+      <select id="boMode"><option value="1">BO1</option><option value="3">BO3</option><option value="5">BO5</option><option value="7" selected>BO7</option></select>
     </label>
     <br/>
     <button onclick="startSeries()">MATCH START</button>
@@ -542,8 +542,6 @@ function handleHeroClick(hero) {
 
   const { team, action } = phase;
   const teamKey = sideToTeam[team];
-
-  const isSeventhGame = (currentGame === 7 && maxGame === 7 && score.A === 3 && score.B === 3);
 
   
   if (selectedHeroes.has(hero)) return;
