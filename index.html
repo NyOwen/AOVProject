@@ -22,6 +22,10 @@
     <label>MODE:
       <select id="boMode"><option value="1">BO1</option><option value="3">BO3</option><option value="5">BO5</option><option value="7" selected>BO7</option></select>
     </label>
+    <label>
+      <input type="checkbox" id="globalBPCheckbox" checked>
+      全局 BP 
+    </label>
     <br/>
     <button onclick="startSeries()">MATCH START</button>
   </div>
@@ -184,6 +188,7 @@
   let matchResults = [];
 
   let swapSelection = null;
+  let useGlobalBP = true;
 
   function saveProgress() {
     const data = {
@@ -279,6 +284,7 @@
   }
 
   function startSeries() {
+    useGlobalBP = document.getElementById("globalBPCheckbox").checked;
     teamAName = document.getElementById("teamA").value;
     teamBName = document.getElementById("teamB").value;
     maxGame = parseInt(document.getElementById("boMode").value);
@@ -366,15 +372,17 @@
       console.warn("未完成選邊或BP流程，不可設定勝負");
       return;
     }
-
-    picks.b.forEach(h => { allPicks[h][sideToTeam.b] = true; });
-    picks.r.forEach(h => { allPicks[h][sideToTeam.r] = true; });
+    if(useGlobalBP){
+      picks.b.forEach(h => { allPicks[h][sideToTeam.b] = true; });
+      picks.r.forEach(h => { allPicks[h][sideToTeam.r] = true; });
+    }
+    
     matchHistory.push({
       bluePick: picks.b.slice(),
       redPick: picks.r.slice(),
       blueBan: bans.b.slice(),
       redBan: bans.r.slice()
-        });
+    });
     score[winner]++;
     const loser = winner === "A" ? "B" : "A";
     sideChooser = loser;
@@ -428,6 +436,9 @@
     phaseIndex = 0;
     phaseActionCount = 0;
     sideSelected = false;
+    if (!useGlobalBP) {
+      heroes.forEach(h => allPicks[h] = { A: false, B: false });
+    }
     updateBPTable();
     document.getElementById("resetRoundBtn").disabled = true;
   }
@@ -510,7 +521,7 @@ function renderHeroes() {
 
       let disable = false;
 
-      if (!isSeventhGame) {
+      if (useGlobalBP && !isSeventhGame) {
         if (p.action === "Pick" && allPicks[hero][currentTeam]) {
           disable = true; // 全局限制（Pick）
         }
