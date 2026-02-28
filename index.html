@@ -122,7 +122,7 @@
     <button onclick="exportToCSV()">匯出比賽結果</button>
   </div>
     
-  <footer id="footer">Ver 1.19 © 2026</footer>
+  <footer id="footer">Ver 2.28 © 2026</footer>
 
   <script>
     const heroes =[
@@ -778,13 +778,18 @@ function exportToCSV() {
   csv.push(...teamBRows);
 
   const cleanName = name => name.replace(/[^\w\u4e00-\u9fa5]/g, "");
-  const fileName = `${cleanName(teamAName)}vs${cleanName(teamBName)}.csv`;
+  const fileName = `${cleanName(teamAName)} vs ${cleanName(teamBName)}.csv`;
   // 建立 CSV 檔案
-  const csvContent = "data:text/csv;charset=utf-8," + csv.map(e => e.join(",")).join("\n");
-  const encodedUri = encodeURI(csvContent);
+  const csvString = csv.map(e => e.join(",")).join("\n");
+
+  // 關鍵：加 BOM
+  const blob = new Blob(["\uFEFF" + csvString], {
+    type: "text/csv;charset=utf-8;"
+  });
+
   const link = document.createElement("a");
-  link.setAttribute("href", encodedUri);
-  link.setAttribute("download", fileName);
+  link.href = URL.createObjectURL(blob);
+  link.download = fileName;
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
