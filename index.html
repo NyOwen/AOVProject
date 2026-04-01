@@ -122,7 +122,7 @@
     <button onclick="exportToCSV()">匯出比賽結果</button>
   </div>
     
-  <footer id="footer">Ver 2.28 © 2026</footer>
+  <footer id="footer">Ver 4.0 © 2026</footer>
 
   <script>
     const heroes =[
@@ -148,7 +148,7 @@
       "拉茲":"MID","莉莉安":"MID","颯枷":"MID","阿茲卡":"MID","伊耿士":"MID",
       "穆加爵":"MID","伊格":"MID","令月":"MID","圖倫":"MID","娜塔亞":"MID","海諾":"MID",
       "克里希":"MID","狄拉克":"MID","洛里昂":"MID","邦尼":"MID","盧蜜亞":"MID","瀾":"MID",
-      "貂蟬":"MID","薇菈":"MID","阿萊斯特":"MID","依夏":"MID","金納":"MID","歌芙拉":"MID",
+      "貂蟬":"MID","薇菈":"MID","阿萊斯特":"MID","依夏":"MID","金納":"MID","歌芙拉":"MID","哥德爾":"MID",
       "蘿兒":"MID","普雷塔":"MID","卡莉":"MID","達爾西":"MID","若伊":"MID","安奈特":"MID",
       "勇":"ADL","森圖爾特":"ADL","卡芬妮":"ADL","亥犽":"ADL","特爾安娜絲":"ADL",
       "凡恩":"ADL","堇":"ADL","蘇":"ADL","靈靈":"ADL","史蘭茲":"ADL","緹莉":"ADL",
@@ -156,11 +156,50 @@
       "菲尼克":"ADL","琳蒂":"ADL",
       "海倫":"SUP","愛麗絲":"SUP","朵莉亞":"SUP",
       "卡瑞茲":"SUP","明世隱":"SUP","芽芽":"SUP","皮皮":"SUP",
-      "薩尼":"SUP","哥德爾":"SUP","牛魔王":"SUP","提米":"SUP","朗博":"SUP",
+      "薩尼":"SUP","牛魔王":"SUP","提米":"SUP","朗博":"SUP",
       "伯頓":"SUP","克萊斯":"SUP","查戈納爾":"SUP","夸克":"SUP","古木":"SUP",
       "歐米茄":"SUP","艾瑞":"SUP","渥馬爾":"SUP","維羅":"SUP","阿杜恩":"SUP","少司緣":"SUP",
       "超人":"SUP","贊尼爾":"SUP","諾可西":"SUP","莫托斯":"SUP","銀晝":"SUP","馬洛斯":"SUP"
     }
+    const heroImages = {
+      "夜叉":"images/Omen.jpg","塔拉":"images/Taara.png","愛里":"images/Airi.jpg",
+      "筱清":"images/Qi.png","龍馬":"images/Ryoma.jpg","艾蜜莉":"images/Amily.png",
+      "美娜":"images/Mina.jpg","麥克思":"images/Max.jpg","緋淚":"images/Veres.png",
+      "弗洛倫":"images/Florentino.png","司科德":"images/Skud.jpg","葉娜":"images/Yena.jpg",
+      "司空震":"images/BoltBaron.png","狂鐵":"images/Biron.png","貝揚":"images/Bijan.png",
+      "夏洛特":"images/Charlotte.jpg","凱格路士":"images/Kil'Groth.jpg","瑞克":"images/Riktor.png",
+      "亞連":"images/Allain.jpg","艾翠絲":"images/Astrid.jpg","夜姬":"images/Dextra.jpg",
+      "莫拉":"images/Murad.jpg","瑪迦":"images/Marja.png","阿塔":"images/Ata.jpg",
+      "呂布":"images/Lubu.jpg","布萊恩":"images/Brian.png","趙雲":"images/Zanis.jpg","瑟斐斯":"images/Zephys.jpg",
+      "青硯":"images/Yan.jpg","比洛爾":"images/Billow.jpg","刀鋒寶貝":"images/Butterfly.png",
+      "洛克":"images/Rourke.jpg","科里納卡":"images/Kriknak.png","納克羅斯":"images/Nakroth.png",
+      "綺蘿":"images/Keera.jpg","星葵":"images/Aoi.png","悟空":"images/WuKong.png",
+      "潘因":"images/Paine.jpg","奎倫":"images/Quillen.png","祖卡":"images/Zuka.png",
+      "凱恩":"images/Kaine.png","齊爾":"images/Zill.jpg","布萊特":"images/Bright.jpg",
+      "閃電俠":"images/TheFlash.jpg","蘇離":"images/Sinestrea.png","神力女超人":"images/WonderWoman.jpg",
+      "蘭鐸":"images/Eland'orr.jpg","霧己":"images/Tachi.jpg","埃羅":"images/Errol.jpg","安格列":"images/Volkath.jpg",
+      "拉茲":"images/Raz.png","莉莉安":"images/Liliana.jpg","颯枷":"images/Zata.png",
+      "阿茲卡":"images/Azzen'Ka.jpg","伊耿士":"images/Ignis.png","穆加爵":"images/Mganga.png",
+      "伊格":"images/Iggy.png","令月":"images/Yue.jpg","圖倫":"images/Tulen.jpg","娜塔亞":"images/Natalya.jpg","海諾":"images/Heino.jpg",
+      "克里希":"images/Krixi.jpg","狄拉克":"images/Dirak.jpg","洛里昂":"images/Lorion.jpg",
+      "邦尼":"images/Bonnie.png","盧蜜亞":"images/Ilumia.png","瀾":"images/Sephera.png",
+      "貂蟬":"images/DiaoChan.jpg","薇菈":"images/Veera.jpg","阿萊斯特":"images/Aleister.jpg",
+      "依夏":"images/Ishar.jpg","金納":"images/Jinnar.png","歌芙拉":"images/Goverra.png",
+      "蘿兒":"images/Lauriel.jpg","普雷塔":"images/Preyta.jpg","卡莉":"images/Kahlii.png",
+      "達爾西":"images/D'arcy.png","若伊":"images/Rouie.png","安奈特":"images/Annette.png",
+      "勇":"images/Yorn.png","森圖爾特":"images/Stuart.png","卡芬妮":"images/Capheny.png","亥犽":"images/Hayate.jpg",
+      "特爾安娜絲":"images/Tel'Annas.jpg","堇":"images/Violet.jpg","蘇":"images/Elsu.png","靈靈":"images/Wisp.png",
+      "凡恩":"images/Valhein.png","史蘭茲":"images/Slimz.png","緹莉":"images/Teeri.jpg",
+      "艾琳":"images/Erin.png","拉維爾":"images/Laville.jpg","摩恩":"images/Moren.jpg","希露卡":"images/Celica.jpg",
+      "菲尼克":"images/Fennik.png","琳蒂":"images/Lindis.jpg","索文":"images/Thorne.jpg",
+      "海倫":"images/Helen.jpg","愛麗絲":"images/Alice.jpg","朵莉亞":"images/Dolia.jpg",
+      "卡瑞茲":"images/Krizzix.png","明世隱":"images/Ming.png","芽芽":"images/Aya.jpg","皮皮":"images/Zip.png",
+      "薩尼":"images/Thane.jpg","哥德爾":"images/Gildur.jpg","牛魔王":"images/Toro.png","提米":"images/TeeMee.jpg","朗博":"images/Lumburr.jpg",
+      "伯頓":"images/Baldum.png","克萊斯":"images/Cresht.png","查戈納爾":"images/Chaugnar.jpg","夸克":"images/Grakk.jpg","古木":"images/Y'bneth.png",
+      "歐米茄":"images/Omega.jpg","艾瑞":"images/Arum.jpg","渥馬爾":"images/Ormarr.png","維羅":"images/Wiro.png","阿杜恩":"images/Arduin.jpg","少司緣":"images/Dyadia.jpg",
+      "超人":"images/Superman.jpg","贊尼爾":"images/Xeniel.jpg","諾可西":"images/Roxie.png","莫托斯":"images/Arthur.jpg","銀晝":"images/Enzo.jpg","馬洛斯":"images/Maloch.png"
+    };
+
     const phaseSequence = [
       { team: "b", action: "Ban", count: 1 }, { team: "r", action: "Ban", count: 1 },
       { team: "b", action: "Ban", count: 1 }, { team: "r", action: "Ban", count: 1 },
@@ -516,8 +555,19 @@ function renderHeroes() {
 
     heroes.filter(h => heroRoles[h] === role).forEach(hero => {
       const btn = document.createElement("button");
-      btn.innerText = hero;
-      btn.className = "hero"; // 保持現有樣式
+      btn.className = "hero";
+      // 圖片
+      const img = document.createElement("img");
+      img.src = heroImages[hero];
+      img.alt = hero;
+
+      // 名字
+      const label = document.createElement("span");
+      label.innerText = hero;
+
+      // 加進按鈕
+      btn.appendChild(img);
+      btn.appendChild(label);
 
       let disable = false;
 
