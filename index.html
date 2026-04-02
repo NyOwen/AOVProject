@@ -253,7 +253,9 @@
       phaseIndex,
       phaseActionCount,
       matchHistory,
-      matchResults
+      matchResults,
+      useGlobalBP,
+      useUltimate
     };
     localStorage.setItem("bpProgress", JSON.stringify(data));
   }
@@ -281,6 +283,8 @@
     phaseActionCount = data.phaseActionCount;
     matchHistory = data.matchHistory || [];
     matchResults = data.matchResults || [];
+    useGlobalBP = data.useGlobalBP;
+    useUltimate = data.useUltimate;
 
     // 🟡 重建 selectedHeroes（當局已經選 / 禁英雄）
     selectedHeroes.clear();
