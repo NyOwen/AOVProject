@@ -14,9 +14,9 @@ body {
   width: 80px;
   height: 90px;
   border-radius: 10px;
-  border: 1px solid #555;
-  background: yellow;
-  color: black;
+  background: rgba(0, 0, 0, 0.705);
+  opacity: 1;
+  color: white;
   cursor: pointer;
   padding: 4px;
 }
@@ -38,7 +38,7 @@ body {
 
 /* disabled 狀態 */
 .hero:disabled {
-  opacity: 0.4;
+  opacity: 0.3;
   filter: grayscale(100%);
 }
 .hero-section {

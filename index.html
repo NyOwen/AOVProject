@@ -26,6 +26,10 @@
       <input type="checkbox" id="globalBPCheckbox" checked>
       全局 BP 
     </label>
+    <label>
+      <input type="checkbox" id="ultimateBattleCheckbox">
+      巔峰對決
+    </label>
     <br/>
     <button onclick="startSeries()">MATCH START</button>
   </div>
@@ -210,7 +214,9 @@
       { team: "r", action: "Pick", count: 1 }, { team: "b", action: "Pick", count: 2 },
       { team: "r", action: "Pick", count: 1 }
     ];
-
+    const blindSequence = [
+      { team: "b", action: "Pick", count: 5 }, { team: "r", action: "Pick", count: 5 }
+    ];
   let teamAName = "A隊", teamBName = "B隊";
   let score = { A: 0, B: 0 };
   let currentGame = 0, maxGame = 7;
@@ -228,6 +234,7 @@
 
   let swapSelection = null;
   let useGlobalBP = true;
+  let useUltimate = false;
 
   function saveProgress() {
     const data = {
@@ -324,6 +331,7 @@
 
   function startSeries() {
     useGlobalBP = document.getElementById("globalBPCheckbox").checked;
+    useUltimate = document.getElementById("ultimateBattleCheckbox").checked;
     teamAName = document.getElementById("teamA").value;
     teamBName = document.getElementById("teamB").value;
     maxGame = parseInt(document.getElementById("boMode").value);
@@ -406,7 +414,7 @@
 }
 
   function setWinner(winner) {
-    const bpFinished = phaseIndex >= phaseSequence.length;
+    const bpFinished = phaseIndex >= getPhaseSequence().length;
     if (!sideSelected || !bpFinished) {
       console.warn("未完成選邊或BP流程，不可設定勝負");
       return;
@@ -482,10 +490,17 @@
     document.getElementById("resetRoundBtn").disabled = true;
   }
 
+function getPhaseSequence() {
+  if (useUltimate && currentGame === 7) {
+    return blindSequence;
+  }
+  return phaseSequence; // 原本那套
+}
 
 function renderPhase() {
-const p = phaseSequence[phaseIndex];
-const bpFinished = phaseIndex >= phaseSequence.length;
+const seq = getPhaseSequence();
+const p = seq[phaseIndex];
+const bpFinished = phaseIndex >= getPhaseSequence().length;
 const sideDone = !!sideSelected;
 
 
@@ -530,7 +545,7 @@ function renderHeroes() {
   container.innerHTML = "";
 
   // 非 BP 階段不顯示
-  if (!sideSelected || phaseIndex >= phaseSequence.length) {
+  if (!sideSelected || phaseIndex >= getPhaseSequence().length) {
     container.style.display = "none";
     return;
   } else {
@@ -538,7 +553,8 @@ function renderHeroes() {
   }
 
   const roles = ["DSL", "JUG", "MID", "ADL", "SUP"];
-  const p = phaseSequence[phaseIndex];
+  const seq = getPhaseSequence();
+  const p = seq[phaseIndex];
   const currentTeam = sideToTeam[p.team]; // A or B
   const isSeventhGame = (maxGame === 7 && currentGame === 7);
 
@@ -576,8 +592,10 @@ function renderHeroes() {
           disable = true; // 全局限制（Pick）
         }
       }
-      if (selectedHeroes.has(hero)) {
-        disable = true; // 當局限制
+      const isUltimate = (useUltimate && currentGame === 7);
+
+      if (!isUltimate) {
+        if (selectedHeroes.has(hero)) disable = true;
       }
 
       if (disable) {
@@ -598,7 +616,8 @@ function handleHeroClick(hero) {
   if (!confirm(`確定要選擇 ${hero} 嗎？`)) {
     return; // 使用者按「取消」就不執行後續
   }
-  const phase = phaseSequence[phaseIndex];
+  const seq = getPhaseSequence();
+  const phase = seq[phaseIndex];
   if (!phase) return;
 
   const { team, action } = phase;
@@ -607,7 +626,9 @@ function handleHeroClick(hero) {
   
   if (selectedHeroes.has(hero)) return;
   selectedHeroes.add(hero);
-
+  if (useUltimate && currentGame === 7) {
+    if (picks[team].includes(hero)) return;
+  }
 
   if (action === "Pick") {
     picks[team].push(hero);
