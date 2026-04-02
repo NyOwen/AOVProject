@@ -13,9 +13,8 @@ body {
   justify-content: center;
   width: 80px;
   height: 90px;
-  border-radius: 10px;
-  background: rgba(0, 0, 0, 0.705);
-  opacity: 1;
+  border-radius: 5px;
+  background: rgba(0, 0, 0, 0.6);
   color: white;
   cursor: pointer;
   padding: 4px;
@@ -39,7 +38,7 @@ body {
 /* disabled 狀態 */
 .hero:disabled {
   opacity: 0.3;
-  filter: grayscale(100%);
+  filter: grayscale(75%);
 }
 .hero-section {
   margin-bottom: 20px;
