@@ -441,7 +441,7 @@
     document.getElementById("btnWinB").disabled = true;
 
     if (score[winner] > Math.floor(maxGame / 2)) {
-      alert(`系列賽結束，獲勝隊伍：${winner === "A" ? teamAName : teamBName}`);
+      alert(`比賽結束，${winner === "A" ? teamAName : teamBName} 獲勝`);
       updateScoreboard();
       document.getElementById("resetRoundBtn").disabled = true;
       document.getElementById("exportSection").style.display = "block";
