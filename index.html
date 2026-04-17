@@ -8,7 +8,7 @@
 </head>
 <body>
   <h1>GCS 2026 春季賽</h1>
-  <h2>例行賽 </h2>
+  <h2>季後賽 </h2>
   <div id="teamSelect" style="font-size: 20px;">
     
     <select id="teamA" style="color: blue;">
@@ -829,7 +829,7 @@ function exportToCSV() {
   csv.push(...teamBRows);
 
   const cleanName = name => name.replace(/[^\w\u4e00-\u9fa5]/g, "");
-  const fileName = `${cleanName(teamAName)} vs ${cleanName(teamBName)}.csv`;
+  const fileName = `Playoffs ${cleanName(teamAName)} vs ${cleanName(teamBName)}.csv`;
   // 建立 CSV 檔案
   const csvString = csv.map(e => e.join(",")).join("\n");
 
