@@ -3,21 +3,28 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AOV 2026 </title>
+  <title>APL 2026 </title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>GCS 2026 春季賽</h1>
-  <h2>總決賽 </h2>
+  <h1>APL 2026</h1>
   <div id="teamSelect" style="font-size: 20px;">
     
-    <select id="teamA" style="color: blue;">
-      <option>TEAM 1</option><option>LIT</option><option> FW</option><option>ONE</option><option>BMG</option><option>HKA</option><option>DCG</option><option>ANK</option>       
-    </select>   
+    <input 
+      type="text" 
+      id="teamA" 
+      placeholder="TEAM 1"
+      value="TEAM 1"
+      style="color: blue;"
+    >
     <label> V.S </label>        
-    <select id="teamB" style="color: red;">
-      <option>TEAM 2</option><option>LIT</option><option> FW</option><option>ONE</option><option>BMG</option><option>HKA</option><option>DCG</option><option>ANK</option>       
-    </select>
+    <input 
+      type="text" 
+      id="teamB" 
+      placeholder="TEAM 2"
+      value="TEAM 2"
+      style="color: red;"
+    >
     <br/>
     <label>MODE:
       <select id="boMode"><option value="1">BO1</option><option value="3">BO3</option><option value="5">BO5</option><option value="7" selected>BO7</option></select>
@@ -122,7 +129,7 @@
     <button onclick="exportToCSV()">匯出比賽結果</button>
   </div>
     
-  <footer id="footer">Ver 4.0 © 2026</footer>
+  <footer id="footer">Ver 5.0 © 2026</footer>
 
   <script>
     const heroes =[
@@ -829,7 +836,7 @@ function exportToCSV() {
   csv.push(...teamBRows);
 
   const cleanName = name => name.replace(/[^\w\u4e00-\u9fa5]/g, "");
-  const fileName = `Finals ${cleanName(teamAName)} vs ${cleanName(teamBName)}.csv`;
+  const fileName = `${cleanName(teamAName)} vs ${cleanName(teamBName)}.csv`;
   // 建立 CSV 檔案
   const csvString = csv.map(e => e.join(",")).join("\n");
 
