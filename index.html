@@ -332,12 +332,16 @@
 
   function startSeries() {
     useGlobalBP = document.getElementById("globalBPCheckbox").checked;
-    teamAName = document.getElementById("teamA").value;
-    teamBName = document.getElementById("teamB").value;
+    teamAName = document.getElementById("teamA").value.trim();
+    teamBName = document.getElementById("teamB").value.trim();
     maxGame = parseInt(document.getElementById("boMode").value);
+    if (!teamAName || !teamBName){
+      alert("請輸入對陣雙方隊名！");
+      return;
+    }
 
     if (teamAName === teamBName) {
-      alert("請選擇不同隊伍！");
+      alert("雙方隊名不可重複！");
       return;
     }
 
