@@ -73,7 +73,7 @@
     <!-- Blue Side 表格 -->
     <table class="bp-table" style="background-color: rgb(74, 246, 243);">
       <tr>
-        <td id="blueTitle"> Blue Side</td>
+        <td id="blueTitle">Blue</td>
         <td id="blueBan1" style="color: rgb(100, 100, 100);"></td>
         <td id="blueBan2" style="color: rgb(100, 100, 100);"></td>
         <td id="blueBan3" style="color: rgb(100, 100, 100);"></td>
@@ -94,7 +94,7 @@
         <td id="redBan3" style="color: rgb(100, 100, 100);"></td>
         <td id="redBan2" style="color: rgb(100, 100, 100);"></td>
         <td id="redBan1" style="color: rgb(100, 100, 100);"></td>
-        <td id="redTitle"> Red Side</td>
+        <td id="redTitle">Red</td>
       </tr>
       <tr style="color: red;">
         <td id="redPick5"></td>
@@ -643,15 +643,69 @@ function handleHeroClick(hero) {
 function updateBPTable() {
   // 更新藍方 Ban
   for (let i = 0; i < 4; i++) {
-    const cell = document.getElementById(`blueBan${i + 1}`);
-    cell.innerText = bans.b[i] || "";
+
+  const cell = document.getElementById(`blueBan${i + 1}`);
+  const hero = bans.b[i];
+
+  if (hero) {
+
+    const imgSrc = heroImages[hero];
+
+    cell.innerHTML = `
+      <div style="text-align:center;">
+        <img
+          src="${imgSrc}"
+          alt="${hero}"
+          style="
+            width: 54px;
+            height: 54px;
+            object-fit: cover;
+            border-radius: 8px;
+
+            filter: grayscale(100%);
+            opacity: 0.6;
+          "
+        >
+        <div style="font-size:14px;">
+          ${hero}
+        </div>
+      </div>
+    `;
+
+  } else {
+    cell.innerHTML = "";
   }
+}
 
   // 更新藍方 Pick
   for (let i = 0; i < 5; i++) {
     const cell = document.getElementById(`bluePick${i + 1}`);
     const hero = picks.b[i] || "";
-    cell.innerText = hero;
+    if (hero) {
+
+    const imgSrc = heroImages[hero];
+
+    cell.innerHTML = `
+      <div style="text-align:center;">
+        <img
+          src="${imgSrc}"
+          alt="${hero}"
+          style="
+            width: 54px;
+            height: 54px;
+            object-fit: cover;
+            border-radius: 8px;
+          "
+        >
+        <div style="font-size:14px;">
+          ${hero}
+        </div>
+      </div>
+    `;
+
+  } else {
+    cell.innerHTML = "";
+  }
     cell.dataset.side = "b";
     cell.dataset.index = i;
     cell.onclick = handleSwapClick;
@@ -659,15 +713,69 @@ function updateBPTable() {
 
   // 更新紅方 Ban
   for (let i = 0; i < 4; i++) {
-    const cell = document.getElementById(`redBan${i + 1}`);
-    cell.innerText = bans.r[i] || "";
+
+  const cell = document.getElementById(`redBan${i + 1}`);
+  const hero = bans.r[i];
+
+  if (hero) {
+
+    const imgSrc = heroImages[hero];
+
+    cell.innerHTML = `
+      <div style="text-align:center;">
+        <img
+          src="${imgSrc}"
+          alt="${hero}"
+          style="
+            width: 54px;
+            height: 54px;
+            object-fit: cover;
+            border-radius: 8px;
+
+            filter: grayscale(100%);
+            opacity: 0.6;
+          "
+        >
+        <div style="font-size:14px;">
+          ${hero}
+        </div>
+      </div>
+    `;
+
+  } else {
+    cell.innerHTML = "";
   }
+}
 
   // 更新紅方 Pick
   for (let i = 0; i < 5; i++) {
     const cell = document.getElementById(`redPick${i + 1}`);
     const hero = picks.r[i] || "";
-    cell.innerText = hero;
+    if (hero) {
+
+    const imgSrc = heroImages[hero];
+
+    cell.innerHTML = `
+      <div style="text-align:center;">
+        <img
+          src="${imgSrc}"
+          alt="${hero}"
+          style="
+            width: 54px;
+            height: 54px;
+            object-fit: cover;
+            border-radius: 8px;
+          "
+        >
+        <div style="font-size:14px;">
+          ${hero}
+        </div>
+      </div>
+    `;
+
+  } else {
+    cell.innerHTML = "";
+  }
     cell.dataset.side = "r";
     cell.dataset.index = i;
     cell.onclick = handleSwapClick;
