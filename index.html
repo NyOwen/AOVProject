@@ -126,11 +126,11 @@
   </div>
 
   <div id="exportSection" style="display:none;">
-    <button onclick="exportToCSV()">匯出比賽結果</button>
+    <button onclick="exportToExcel()">匯出比賽結果</button>
   </div>
     
   <footer id="footer">Ver 5.0 © 2026</footer>
-
+  <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
   <script>
     const heroes =[
       "夜叉","塔拉","愛里","筱清","龍馬","艾蜜莉","美娜","麥克思","緋淚","弗洛倫","司科德","葉娜",
@@ -901,23 +901,40 @@ function resetAll() {
   updateBPTable();
 }
 
-function exportToCSV() {
-  let csv = [];
-  csv.push(["Game", "Team", "Side", "Ban1", "Ban2", "Ban3", "Ban4", "Pick1", "Pick2", "Pick3", "Pick4", "Pick5", "Result"]);
+function exportToExcel() {
+
+  let data = [];
+
+  data.push([
+    "Game", "Team", "Side",
+    "Ban1", "Ban2", "Ban3", "Ban4",
+    "Pick1", "Pick2", "Pick3", "Pick4", "Pick5",
+    "Result"
+  ]);
+
   const teamARows = [];
   const teamBRows = [];
 
   matchResults.forEach((result, index) => {
+
     const gameNum = index + 1;
     const match = matchHistory[index];
 
     // Blue side
     const blueTeam = result.blue === "A" ? teamAName : teamBName;
     const blueResult = result.winner === result.blue ? "WIN" : "LOSE";
+
     const blueRow = [
-      gameNum, blueTeam, "Blue",
-      ...match.blueBan, ...Array(4 - match.blueBan.length).fill(""),
-      ...match.bluePick, ...Array(5 - match.bluePick.length).fill(""),
+      gameNum,
+      blueTeam,
+      "Blue",
+
+      ...match.blueBan,
+      ...Array(4 - match.blueBan.length).fill(""),
+
+      ...match.bluePick,
+      ...Array(5 - match.bluePick.length).fill(""),
+
       blueResult
     ];
 
@@ -930,10 +947,18 @@ function exportToCSV() {
     // Red side
     const redTeam = result.red === "A" ? teamAName : teamBName;
     const redResult = result.winner === result.red ? "WIN" : "LOSE";
+
     const redRow = [
-      gameNum, redTeam, "Red",
-      ...match.redBan, ...Array(4 - match.redBan.length).fill(""),
-      ...match.redPick, ...Array(5 - match.redPick.length).fill(""),
+      gameNum,
+      redTeam,
+      "Red",
+
+      ...match.redBan,
+      ...Array(4 - match.redBan.length).fill(""),
+
+      ...match.redPick,
+      ...Array(5 - match.redPick.length).fill(""),
+
       redResult
     ];
 
@@ -944,25 +969,28 @@ function exportToCSV() {
     }
   });
 
-  csv.push(...teamARows);
-  csv.push(...teamBRows);
+  data.push(...teamARows);
+  data.push(...teamBRows);
 
-  const cleanName = name => name.replace(/[^\w\u4e00-\u9fa5]/g, "");
-  const fileName = `${cleanName(teamAName)} vs ${cleanName(teamBName)}.csv`;
-  // 建立 CSV 檔案
-  const csvString = csv.map(e => e.join(",")).join("\n");
+  // ===== 建立 Excel =====
 
-  // 關鍵：加 BOM
-  const blob = new Blob(["\uFEFF" + csvString], {
-    type: "text/csv;charset=utf-8;"
-  });
+  const ws = XLSX.utils.aoa_to_sheet(data);
 
-  const link = document.createElement("a");
-  link.href = URL.createObjectURL(blob);
-  link.download = fileName;
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
+  const wb = XLSX.utils.book_new();
+
+  XLSX.utils.book_append_sheet(
+    wb,
+    ws,
+    "Match Result"
+  );
+
+  const cleanName = name =>
+    name.replace(/[^\w\u4e00-\u9fa5]/g, "");
+
+  const fileName =
+    `${cleanName(teamAName)} vs ${cleanName(teamBName)}.xlsx`;
+
+  XLSX.writeFile(wb, fileName);
 }
 
 window.onload = function() {
