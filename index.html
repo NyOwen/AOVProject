@@ -130,7 +130,7 @@
   </div>
     
   <footer id="footer">Ver 5.0 © 2026</footer>
-  <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
+  <script src="https://unpkg.com/xlsx-js-style/dist/xlsx.bundle.js"></script>
   <script>
     const heroes =[
       "夜叉","塔拉","愛里","筱清","龍馬","艾蜜莉","美娜","麥克思","緋淚","弗洛倫","司科德","葉娜",
@@ -975,7 +975,48 @@ function exportToExcel() {
   // ===== 建立 Excel =====
 
   const ws = XLSX.utils.aoa_to_sheet(data);
+  const range = XLSX.utils.decode_range(ws["!ref"]);
 
+for (let row = 1; row <= range.e.r; row++) {
+
+  const side =
+    ws[XLSX.utils.encode_cell({ r: row, c: 2 })]?.v;
+
+  const result =
+    ws[XLSX.utils.encode_cell({ r: row, c: 12 })]?.v;
+
+  const rowColor =
+    side === "Blue"
+      ? "0000FF"
+      : "FF0000";
+
+  for (let col = 0; col <= 12; col++) {
+
+    const cell = XLSX.utils.encode_cell({
+      r: row,
+      c: col
+    });
+
+    if (!ws[cell]) continue;
+
+    ws[cell].s = {
+      font: {
+        color: { rgb: rowColor },
+        bold: true
+      }
+    };
+
+    if (result === "WIN") {
+
+      ws[cell].s.fill = {
+        fgColor: {
+          rgb: "FFFF00"
+        }
+      };
+
+    }
+  }
+}
   const wb = XLSX.utils.book_new();
 
   XLSX.utils.book_append_sheet(
